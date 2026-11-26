@@ -77,6 +77,10 @@ Ausblende-Muster werden auf dem Server geprüft: sehr lange und solche, die minu
 | Installation | HACS und Marketplace (Kategorie *Integration*), oder `custom_components/config_entry_panel` von Hand kopieren. |
 | Größe | Ein 78-kB-Skript, nur auf Seiten mit Dashboards geladen. |
 
+## Aktuell bleiben
+
+Schlägt eine Anfrage fehl, behält die Karte, was sie zeigt, und versucht es erneut (nach 2, 5, 15, dann alle 60 Sekunden). Sie fragt neu, wenn die WebSocket-Verbindung zurückkommt, wenn die Seite aus dem Hintergrund zurückkehrt und alle fünf Minuten, solange sie sichtbar ist. Nur die Antwort des Servers *du darfst diese Karte nicht sehen* blendet sie aus.
+
 ## Fehlersuche
 
 | Symptom | Ursache |

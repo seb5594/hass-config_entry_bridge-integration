@@ -110,6 +110,60 @@ if (require.main === module) {
       assert.match(await page.evaluate(() => window.customCards.find((c) => c.type === "config-entry-panel").description), /Zahnrad/);
       await page.close();
 
+      // 1d. stability: a card that is shown stays shown
+      page = await open(browser, "dark", { width: 390, height: 844 });
+      await mount(page, "anna");
+      const steady = await page.evaluate(async () => {
+        const c = document.querySelector("config-entry-panel"); const out = {};
+        c.retryDelays = [40, 40, 40];
+        const announced = []; c.addEventListener("card-visibility-changed", (e) => announced.push(e.detail.value));
+        window.fake.state.fail = 2; c.refresh();                                   // two requests fail in a row
+        await new Promise((r) => setTimeout(r, 150));
+        out.hiddenAfterFailure = c.hasAttribute("hidden"); out.hasPanel = Boolean(c._panel);
+        await new Promise((r) => setTimeout(r, 400));                              // the retries succeed
+        out.failureCleared = c._failure === undefined; out.announced = announced;
+        c.setConfig({ type: "custom:config-entry-panel", entry_id: "e1" });         // the dashboard rebuilds: same entry
+        out.panelKeptBySetConfig = Boolean(c._panel) && !c.hasAttribute("hidden");
+        const before = window.fake.state.calls.filter((x) => x.endsWith("/panel")).length;
+        c.hass.connection.emitReady();                                             // the websocket came back
+        await new Promise((r) => setTimeout(r, 150));
+        out.askedAgainOnReady = window.fake.state.calls.filter((x) => x.endsWith("/panel")).length - before;
+        return out;
+      });
+      assert.deepEqual([steady.hiddenAfterFailure, steady.hasPanel], [false, true], "a failed refresh must not take the card away");
+      assert.equal(steady.failureCleared, true);
+      assert.deepEqual(steady.announced, [], "the dashboard is never told to hide a card that stays");
+      assert.equal(steady.panelKeptBySetConfig, true, "setConfig for the same entry does not blank the card");
+      assert.equal(steady.askedAgainOnReady, 1, "a reconnected websocket triggers one fresh request");
+      await page.close();
+
+      // 1e. a card whose first requests fail appears as soon as the server answers, without announcing anything before
+      page = await open(browser, "dark", { width: 390, height: 844 });
+      const late = await page.evaluate(async () => {
+        window.fake.state.fail = 2;
+        const slot = document.createElement("div"); slot.className = "slot"; document.getElementById("root").append(slot);
+        const card = document.createElement("config-entry-panel"); const announced = [];
+        card.addEventListener("card-visibility-changed", (e) => announced.push(e.detail.value));
+        card.retryDelays = [40, 40, 40];
+        card.setConfig({ type: "custom:config-entry-panel", entry_id: "e1" });
+        card.hass = window.fake.makeHass({ id: "u-anna", name: "Anna", is_admin: false });
+        slot.append(card);
+        await new Promise((r) => setTimeout(r, 90));
+        const early = { hidden: card.hasAttribute("hidden"), announced: [...announced] };
+        await new Promise((r) => setTimeout(r, 400));
+        return { early, hidden: card.hasAttribute("hidden"), announced };
+      });
+      assert.deepEqual(late.early, { hidden: true, announced: [] }, "nothing is announced while the answer is open");
+      assert.deepEqual([late.hidden, late.announced], [false, [true]], "it appears once and is announced once");
+      await page.close();
+
+      // 1f. a viewer who may not see the card is not asked again and again
+      page = await open(browser, "dark", { width: 390, height: 844 });
+      await mount(page, "carl");
+      await page.waitForTimeout(500);
+      assert.equal(await page.evaluate(() => window.fake.state.calls.filter((x) => x.endsWith("/panel")).length), 1);
+      await page.close();
+
       // 2. the gear: the options flow runs in a dialog and saves
       page = await open(browser);
       await mount(page, "anna");

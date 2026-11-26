@@ -2,6 +2,7 @@ import { html, LitElement, nothing, type PropertyValues, type TemplateResult } f
 import * as api from "../api.ts";
 import { translate } from "../i18n/index.ts";
 import { deviceIcon, deviceSubtitle, toneOf } from "../logic/format.ts";
+import { classify, isStale, REFRESH_EVERY_MS, retryDelay, RETRY_DELAYS } from "../logic/refresh.ts";
 import type { Hass, Panel, PanelDevice, PanelEntity } from "../types.ts";
 import { fire, insideEditor } from "../util/dom.ts";
 import { cardStyles } from "./styles.ts";
@@ -41,8 +42,20 @@ export class ConfigEntryPanel extends LitElement {
   declare _note: Note;
   /** The popup that is open: the entry's settings, or one device with all its entities. */
   declare _sheet: { kind: "entry" } | { kind: "device"; id: string | null } | null;
+  /** `entry|previewed person` of the panel that is loaded or being loaded. */
   private _loadedFor: string | undefined;
   private _loading = false;
+  /** The server has given a final answer (the card may be shown, or it may not); until then nothing is decided. */
+  private _resolved = false;
+  /** The server said this viewer may not see the card. */
+  private _denied = false;
+  private _lastLoad: number | undefined;
+  private _attempt = 0;
+  private _retryTimer: ReturnType<typeof setTimeout> | undefined;
+  private _pollTimer: ReturnType<typeof setInterval> | undefined;
+  private _connection: Hass["connection"];
+  /** Waits between retries; the tests shorten it. */
+  retryDelays: readonly number[] = RETRY_DELAYS;
   private _shown: boolean | undefined;
   private _watched: string[] = [];
   private _closeMenu = (event: Event) => {
@@ -76,16 +89,26 @@ export class ConfigEntryPanel extends LitElement {
       return;
     }
     this._configError = undefined;
-    this._config = { entry_id: (config.entry_id ?? "").trim(), ...(typeof config.title === "string" && config.title ? { title: config.title } : {}) };
+    const entryId = (config.entry_id ?? "").trim();
+    // Home Assistant calls setConfig again whenever the dashboard is rebuilt. The same entry keeps what it shows,
+    // so the card does not blink; only a different entry starts from scratch.
+    if (entryId !== this._config?.entry_id) this._reset();
+    this._config = { entry_id: entryId, ...(typeof config.title === "string" && config.title ? { title: config.title } : {}) };
+  }
+
+  private _reset(): void {
+    clearTimeout(this._retryTimer);
     this._panel = undefined;
     this._failure = undefined;
     this._loadedFor = undefined;
+    this._resolved = false;
+    this._denied = false;
+    this._attempt = 0;
   }
 
   /** Fetches the panel again, for example after the editor changed a rule. */
   refresh(): void {
-    this._loadedFor = undefined;
-    this.requestUpdate();
+    void this._load();
   }
 
   getCardSize(): number {
@@ -102,13 +125,34 @@ export class ConfigEntryPanel extends LitElement {
     super.connectedCallback();
     document.addEventListener("click", this._closeMenu);
     document.addEventListener("keydown", this._escape);
+    document.addEventListener("visibilitychange", this._onVisible);
+    // A card stays current without anybody touching it; a hidden page costs nothing.
+    this._pollTimer = setInterval(() => {
+      if (document.visibilityState === "visible" && this._resolved) void this._load();
+    }, REFRESH_EVERY_MS);
+    // The element may come back from a cached view: look again if what it shows is old.
+    if (this.hass && this._config?.entry_id && isStale(this._lastLoad, Date.now())) void this._load();
   }
 
   override disconnectedCallback(): void {
     document.removeEventListener("click", this._closeMenu);
     document.removeEventListener("keydown", this._escape);
+    document.removeEventListener("visibilitychange", this._onVisible);
+    clearInterval(this._pollTimer);
+    clearTimeout(this._retryTimer);
+    this._connection?.removeEventListener?.("ready", this._onReady);
+    this._connection = undefined;
     super.disconnectedCallback();
   }
+
+  private _onVisible = () => {
+    if (document.visibilityState === "visible" && this._config?.entry_id && isStale(this._lastLoad, Date.now())) void this._load();
+  };
+
+  /** Home Assistant's websocket came back after a drop: whatever failed meanwhile is asked again at once. */
+  private _onReady = () => {
+    if (this._config?.entry_id) void this._load();
+  };
 
   /** Re-render for a new `hass` only when something this card shows has changed. */
   protected override shouldUpdate(changed: PropertyValues): boolean {
@@ -119,22 +163,44 @@ export class ConfigEntryPanel extends LitElement {
   }
 
   protected override willUpdate(): void {
-    if (this.hass && this._config?.entry_id && this._loadedFor !== this._config.entry_id && !this._loading) void this._load();
+    if (!this.hass || !this._config?.entry_id) return;
+    const connection = this.hass.connection;
+    if (connection !== this._connection) {
+      this._connection?.removeEventListener?.("ready", this._onReady);
+      connection?.addEventListener?.("ready", this._onReady);
+      this._connection = connection;
+    }
+    if (this._loadedFor !== this._key && !this._loading) {
+      // Another previewed person is another panel; the old one must not be shown for them.
+      if (this._loadedFor !== undefined) this._reset();
+      void this._load();
+    }
+  }
+
+  private get _key(): string {
+    return `${this._config?.entry_id}|${this.previewPerson ?? ""}`;
   }
 
   /** Opens the popup as soon as it exists; the browser then handles focus, Escape and the backdrop. */
   private _showSheet(): void {
     const dialog = this.renderRoot.querySelector("dialog.sheet") as HTMLDialogElement | null;
-    if (dialog && !dialog.open) dialog.showModal();
+    // Once per dialog: an update between close() and the close event must not open it again.
+    if (dialog && !dialog.open && !dialog.dataset.shown) {
+      dialog.dataset.shown = "1";
+      dialog.showModal();
+    }
   }
 
-  /** A card nobody may see hides itself (and tells the dashboard) until the server has said it may be shown. */
+  /**
+   * A card nobody may see hides itself (and tells the dashboard). Nothing is announced before the server has
+   * answered, and a temporary failure never hides a card that is already there.
+   */
   protected override updated(): void {
+    this._showSheet();
     const allowed = Boolean(this._panel?.caps.visible);
     const shown = allowed || Boolean(this.previewPerson) || (insideEditor(this) && Boolean(this._config));
     this.toggleAttribute("hidden", !shown);
-    this._showSheet();
-    if (this._shown !== shown) {
+    if ((shown || this._resolved) && this._shown !== shown) {
       this._shown = shown;
       fire(this, "card-visibility-changed", { value: shown });
     }
@@ -142,24 +208,55 @@ export class ConfigEntryPanel extends LitElement {
 
   private async _load(): Promise<void> {
     const entryId = this._config?.entry_id;
-    if (!entryId) return;
+    if (!entryId || !this.hass || this._loading) return;
+    const key = this._key;
     this._loading = true;
-    this._loadedFor = entryId;
+    this._loadedFor = key;
+    clearTimeout(this._retryTimer);
     try {
       const panel = await api.panel(this.hass, entryId, this.previewPerson);
-      if (this._config?.entry_id === entryId) {
-        this._panel = panel;
-        this._failure = undefined;
-      }
+      if (this._key !== key) return;
+      this._panel = panel;
+      this._failure = undefined;
+      this._denied = !panel.caps.visible;
+      this._resolved = true;
+      this._attempt = 0;
+      this._lastLoad = Date.now();
     } catch (error) {
-      if (this._config?.entry_id !== entryId) return;
-      const code = api.errorCode(error);
-      this._panel = undefined;
-      // "unauthorized" is the normal answer for everybody who may not see the card: say nothing.
-      this._failure = code === "unauthorized" ? undefined : code === "not_found" ? this.t("card.entry_missing") : code === "unknown_command" || code === "not_loaded" ? this.t("card.not_installed") : this.t("card.load_failed", { message: (error as { message?: string }).message ?? code });
+      if (this._key !== key) return;
+      this._handleFailure(api.errorCode(error), (error as { message?: string }).message);
     } finally {
       this._loading = false;
+      // Resolution flags are not reactive: render again so the visibility is decided and announced.
+      this.requestUpdate();
     }
+  }
+
+  private _handleFailure(code: string, message: string | undefined): void {
+    const outcome = classify(code);
+    if (outcome === "hide") {
+      // The normal answer for everybody who may not see the card: say nothing, and do not ask again.
+      this._panel = undefined;
+      this._failure = undefined;
+      this._denied = true;
+      this._resolved = true;
+      this._lastLoad = Date.now(); // a viewer who gets access later (or who asked during startup) is found by the next refresh
+      return;
+    }
+    if (outcome === "missing") {
+      this._panel = undefined;
+      this._failure = this.t("card.entry_missing");
+      this._resolved = true;
+      return;
+    }
+    // Temporary: keep what is shown, say so only if there is nothing to show, and try again.
+    if (!this._panel) {
+      this._failure = code === "unknown_command" || code === "not_loaded" ? this.t("card.not_installed") : this.t("card.load_failed", { message: message ?? code });
+    }
+    this._retryTimer = setTimeout(() => {
+      this._loadedFor = undefined;
+      void this._load();
+    }, retryDelay(this._attempt++, this.retryDelays));
   }
 
   protected override render(): TemplateResult | typeof nothing {

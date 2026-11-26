@@ -18,6 +18,11 @@ export interface Hass {
   language: string;
   callWS<T>(message: { type: string } & Record<string, unknown>): Promise<T>;
   localize(key: string, ...placeholders: unknown[]): string;
+  /** The websocket connection; it tells when it is ready again after a drop. */
+  connection?: {
+    addEventListener?(type: "ready" | "disconnected", listener: () => void): void;
+    removeEventListener?(type: "ready" | "disconnected", listener: () => void): void;
+  };
   /** The state as the user's language and units show it. */
   formatEntityState?(state: HassState): string;
   /** Loads the translations of an integration's flows; resolves to a `localize` that knows them. */

@@ -11,8 +11,10 @@
 <p align="center">
   <a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=seb5594&amp;repository=hass-config_entry_panel-integration&amp;category=integration"><img src="https://img.shields.io/static/v1?label=HACS%20%C2%B7%20Marketplace&amp;message=Add%20integration&amp;color=41BDF5&amp;logo=homeassistantcommunitystore&amp;logoColor=white&amp;style=for-the-badge" alt="HACS · Marketplace" height="28"></a>
   <a href="https://github.com/seb5594/hass-config_entry_panel-integration/actions/workflows/compat.yml"><img src="https://img.shields.io/static/v1?label=home%20assistant&amp;message=%E2%89%A5%202024.7.0&amp;color=1877A5&amp;style=for-the-badge" alt="home assistant" height="28"></a><br>
-  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/releases/tag/v2026.11.26b1"><img src="https://img.shields.io/static/v1?label=integration%20version&amp;message=2026.11.26b1&amp;color=1877A5&amp;style=for-the-badge" alt="integration version" height="28"></a>
-  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/releases"><img src="https://img.shields.io/github/downloads/seb5594/hass-config_entry_panel-integration/v2026.11.26b1/total?label=downloads&amp;color=1877A5&amp;style=for-the-badge" alt="downloads" height="28"></a><br>
+  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/releases"><img src="https://img.shields.io/static/v1?label=integration%20version&amp;message=2026.11.26.2&amp;color=1877A5&amp;style=for-the-badge" alt="integration version" height="28"></a>
+  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/releases"><img src="https://img.shields.io/github/downloads/seb5594/hass-config_entry_panel-integration/latest/total?label=downloads&amp;color=1877A5&amp;style=for-the-badge" alt="downloads" height="28"></a><br>
+  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/stargazers"><img src="https://img.shields.io/github/stars/seb5594/hass-config_entry_panel-integration?label=stars&amp;style=flat" alt="stars" height="20"></a>
+  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/forks"><img src="https://img.shields.io/github/forks/seb5594/hass-config_entry_panel-integration?label=forks&amp;style=flat" alt="forks" height="20"></a>
   <a href="https://github.com/seb5594/hass-config_entry_panel-integration/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/seb5594/hass-config_entry_panel-integration/ci.yml?branch=main&amp;label=checks&amp;style=flat" alt="checks" height="20"></a>
   <img src="https://img.shields.io/static/v1?label=tests&amp;message=80%20passed&amp;color=2F855A&amp;style=flat" alt="tests" height="20">
   <img src="https://img.shields.io/static/v1?label=frontend%20size&amp;message=76.0%20KiB&amp;color=1877A5&amp;style=flat" alt="frontend size" height="20">
@@ -109,6 +111,10 @@ Hiding patterns are checked on the server: very long ones and ones that could ru
 | Size | One 78 kB script, loaded only on pages that show dashboards. |
 
 Suggested GitHub topics for the repository: `home-assistant`, `hacs`, `hacs-integration`, `home-assistant-custom-component`, `lovelace`, `lovelace-card`, `dashboard`, `config-entry`, `options-flow`, `permissions`.
+
+## Staying current
+
+The card keeps what it shows when a request fails and tries again (after 2, 5, 15, then every 60 seconds). It asks again when the websocket reconnects, when the page returns from the background and every five minutes while it is visible. Only the server's answer *you may not see this card* hides it.
 
 ## Troubleshooting
 

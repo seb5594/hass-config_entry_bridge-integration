@@ -109,7 +109,7 @@ function pageScript() {
   const state = { policy: { hidden_entities: [], hidden_patterns: ["rssi$"], people: {
     "person.anna": { sections: ["settings", "devices"], configure: true, reload: true, hidden_entities: ["sensor.last_sync"], hidden_patterns: [] },
     "person.ben": { sections: ["devices"], configure: false, reload: false, hidden_entities: [], hidden_patterns: [] } } },
-    options: { shift_reminder: 30, notify: true }, reloads: 0, flows: {}, calls: [] };
+    options: { shift_reminder: 30, notify: true }, reloads: 0, flows: {}, calls: [], fail: 0 };
   const GROUP = (e) => e.entity_category === "diagnostic" ? "diagnostic" : e.entity_category === "config" ? "config" : /^(sensor|binary_sensor)\\./.test(e.entity_id) ? "sensor" : "control";
   const hiddenFor = (person) => { const rule = state.policy.people[person] || {}; return { ids: [...state.policy.hidden_entities, ...(rule.hidden_entities || [])], patterns: [...state.policy.hidden_patterns, ...(rule.hidden_patterns || [])].map((p) => new RegExp(p, "i")) }; };
   const caps = (person, admin) => { if (admin) return { visible: true, admin: true, settings: true, devices: true, configure: true, reload: true }; const r = state.policy.people[person]; if (!r) return { visible: false, admin: false, settings: false, devices: false, configure: false, reload: false }; return { visible: true, admin: false, settings: r.sections.includes("settings"), devices: r.sections.includes("devices"), configure: r.configure, reload: r.reload }; };
@@ -146,9 +146,11 @@ function pageScript() {
     "component.perdis_roster.options.step.init.data_description.shift_reminder": "Between 5 and 120 minutes.", "component.perdis_roster.options.error.too_long": "That is longer than two hours." };
   window.fake = { state, entities, people, entry,
     makeHass(user) {
-      return { user, language: "en", states, localize: (k, ...r) => { const v = LOCAL[k] ?? OPTIONS[k]; if (v) return v; if (k.endsWith("config_entry.firmware")) return "Firmware: " + r[1]; return ""; },
+      const listeners = new Set();
+      const connection = { addEventListener: (type, cb) => type === "ready" && listeners.add(cb), removeEventListener: (type, cb) => listeners.delete(cb), emitReady: () => listeners.forEach((cb) => cb()) };
+      return { user, connection, language: "en", states, localize: (k, ...r) => { const v = LOCAL[k] ?? OPTIONS[k]; if (v) return v; if (k.endsWith("config_entry.firmware")) return "Firmware: " + r[1]; return ""; },
         loadBackendTranslation: async () => (k) => OPTIONS[k] || "", formatEntityState: (s) => s.state,
-        callWS: async (m) => { state.calls.push(m.type); await new Promise((r) => setTimeout(r, 20)); const h = handlers[m.type]; if (!h) throw err("unknown_command"); return JSON.parse(JSON.stringify(h(m, user) ?? null)); } };
+        callWS: async (m) => { state.calls.push(m.type); await new Promise((r) => setTimeout(r, 20)); if (state.fail > 0) { state.fail--; throw Object.assign(new Error("connection lost"), { code: 3 }); } const h = handlers[m.type]; if (!h) throw err("unknown_command"); return JSON.parse(JSON.stringify(h(m, user) ?? null)); } };
     } };
 })();`;
 }
