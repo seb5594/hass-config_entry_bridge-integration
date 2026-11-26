@@ -12,11 +12,11 @@ Home Assistant hält die Seite eines Integrationseintrags, mit Zahnrad, ⋮-Men�
 
 ## Das bekommst du
 
-- **Den Eintragsblock der Einstellungsseite:** Titel, Integration, Status, Zahnrad und ⋮-Menü, darunter die Geräte mit ihren Entitäten, gruppiert wie die Geräteseite (Steuerelemente, Sensoren, Konfiguration, Diagnose).
+- **Den Eintragsblock der Einstellungsseite, so kompakt wie dort:** Titel, Integration und Status mit Zahnrad und ⋮-Menü rechts, darunter eine Zeile pro Gerät. Ein Tipp auf ein Gerät öffnet ein Popup (auf Smartphones ein Vollbild-Sheet) mit allen Entitäten, gruppiert wie die Geräteseite (Steuerelemente, Sensoren, Konfiguration, Diagnose); ein Tipp auf den Eintrag zeigt seine Einstellungen.
 - **Das Zahnrad für Personen ohne Administratorrechte:** Der Optionen-Dialog der Integration öffnet sich in der Karte und speichert, mit allen Feldtypen, die die Integration nutzt.
 - **Neu laden über das Menü.**
 - **Rechte pro Person:** Personen auswählen, ankreuzen, was sie sehen (Einstellungen des Eintrags, Geräte und Entitäten) und was sie tun dürfen (Zahnrad, Neu laden). Alles wird auf dem Server gespeichert und durchgesetzt.
-- **Entitäten ausblenden** für alle oder für eine Person: per Checkbox oder ganze Gruppen per regulärem Ausdruck wie `_rssi$`. Ausgeblendete Entitäten verlassen den Server gar nicht erst.
+- **Entitäten ausblenden** für alle oder für eine Person: per Suche und Checkbox oder ganze Gruppen per regulärem Ausdruck wie `_rssi$`. Ausgeblendete Entitäten verlassen den Server gar nicht erst.
 - **Vorschau als Person:** Die Karte genau so sehen, wie die gewählte Person sie sieht, bevor du versehentlich zu viel freigibst.
 - **Ohne Rechte unsichtbar:** Wer nicht aufgeführt ist, bekommt keine Karte, keinen Rahmen und keinen Hinweis, dass es sie gibt.
 - **Keine manuelle Ressource:** Die Integration liefert die Karte aus und registriert sie selbst.
@@ -71,11 +71,11 @@ Ausblende-Muster werden auf dem Server geprüft: sehr lange und solche, die minu
 
 | | |
 | --- | --- |
-| Home Assistant | **2024.11 und neuer.** Echt getestet, mit dem echten Core, auf 2024.11, 2025.1, 2025.12, 2026.2 und 2026.9 (Python 3.12 bis 3.14); der Compatibility-Workflow testet die folgenden Releases weiter. |
+| Home Assistant | **2024.7 und neuer.** Echt getestet, mit dem echten Core, von 2024.7 bis 2026.9 (Python 3.12 bis 3.14); der Compatibility-Workflow testet die folgenden Releases weiter und senkt das Minimum, soweit die Tests bestehen. |
 | Dashboards | Masonry- und Bereichsansicht, Bearbeitungsmodus, YAML-Modus. Die Karte meldet ihre Größe an das Bereichslayout. |
-| Browser | Aktuelle Versionen von Chrome, Edge, Firefox und Safari sowie die Home-Assistant-Apps. |
+| Browser und Smartphones | Aktuelle Versionen von Chrome, Edge, Firefox und Safari sowie die Home-Assistant-Apps. Smartphone zuerst gebaut: nichts ist breiter als der Bildschirm, Popups sind Vollbild-Sheets, Touch-Ziele haben 44 px. |
 | Installation | HACS und Marketplace (Kategorie *Integration*), oder `custom_components/config_entry_panel` von Hand kopieren. |
-| Größe | Ein 72-kB-Skript, nur auf Seiten mit Dashboards geladen. |
+| Größe | Ein 78-kB-Skript, nur auf Seiten mit Dashboards geladen. |
 
 ## Fehlersuche
 
@@ -102,4 +102,4 @@ Die Python-Seite hat einfache Unit-Tests in `.github/tests` und Tests gegen eine
 
 ## Releases
 
-Die ersten Releases sind **Vorabversionen** (`2026.11.26b1`, `b2` …), bis das Panel sich bewährt hat. Versionen folgen `YYYY.MM.DD`, mit `.1`, `.2` für weitere Builds eines Tages.
+Versionen folgen `YYYY.MM.DD`, mit `.1`, `.2` für weitere Builds eines Tages. Eine neue Version auf `main` veröffentlicht das HACS-ZIP als neuestes Release.

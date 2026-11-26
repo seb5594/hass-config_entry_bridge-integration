@@ -5,6 +5,8 @@ import { deviceIcon, deviceSubtitle, toneOf } from "../logic/format.ts";
 import type { Hass, Panel, PanelDevice, PanelEntity } from "../types.ts";
 import { fire, insideEditor } from "../util/dom.ts";
 import { cardStyles } from "./styles.ts";
+
+type Card = ConfigEntryPanel;
 import type { OptionsDialog } from "./options-dialog.ts";
 
 const RELOAD_SETTLE_MS = 1200;
@@ -24,6 +26,7 @@ export class ConfigEntryPanel extends LitElement {
     _menuOpen: { state: true },
     _busy: { state: true },
     _note: { state: true },
+    _sheet: { state: true },
   };
   static override styles = cardStyles;
 
@@ -36,6 +39,8 @@ export class ConfigEntryPanel extends LitElement {
   declare _menuOpen: boolean;
   declare _busy: boolean;
   declare _note: Note;
+  /** The popup that is open: the entry's settings, or one device with all its entities. */
+  declare _sheet: { kind: "entry" } | { kind: "device"; id: string | null } | null;
   private _loadedFor: string | undefined;
   private _loading = false;
   private _shown: boolean | undefined;
@@ -52,6 +57,7 @@ export class ConfigEntryPanel extends LitElement {
     this._menuOpen = false;
     this._busy = false;
     this._note = null;
+    this._sheet = null;
   }
 
   static getConfigElement(): HTMLElement {
@@ -116,11 +122,18 @@ export class ConfigEntryPanel extends LitElement {
     if (this.hass && this._config?.entry_id && this._loadedFor !== this._config.entry_id && !this._loading) void this._load();
   }
 
+  /** Opens the popup as soon as it exists; the browser then handles focus, Escape and the backdrop. */
+  private _showSheet(): void {
+    const dialog = this.renderRoot.querySelector("dialog.sheet") as HTMLDialogElement | null;
+    if (dialog && !dialog.open) dialog.showModal();
+  }
+
   /** A card nobody may see hides itself (and tells the dashboard) until the server has said it may be shown. */
   protected override updated(): void {
     const allowed = Boolean(this._panel?.caps.visible);
     const shown = allowed || Boolean(this.previewPerson) || (insideEditor(this) && Boolean(this._config));
     this.toggleAttribute("hidden", !shown);
+    this._showSheet();
     if (this._shown !== shown) {
       this._shown = shown;
       fire(this, "card-visibility-changed", { value: shown });
@@ -157,7 +170,7 @@ export class ConfigEntryPanel extends LitElement {
     const panel = this._panel;
     if (!panel) return this._renderWithout(preview);
     this._watched = panel.devices.flatMap((device) => device.groups.flatMap((group) => group.entities.map((entity) => entity.entity_id)));
-    return html`<ha-card>${preview}${this._renderEntry(panel)}${panel.settings ? this._renderSettings(panel) : nothing}${panel.caps.devices ? this._renderDevices(panel) : nothing}</ha-card>`;
+    return html`<ha-card>${preview}${this._renderEntry(panel)}${panel.caps.devices ? this._renderDevices(panel) : nothing}</ha-card>${this._sheet ? this._renderSheet(panel) : nothing}`;
   }
 
   /** Nothing to show: an error for those who can act on it, a note in the editor, else not even a frame. */
@@ -186,67 +199,99 @@ export class ConfigEntryPanel extends LitElement {
     const tone = toneOf(entry.state, entry.disabled_by);
     const stateText = this.hass.localize(`ui.panel.config.integrations.config_entry.state.${entry.state}`) || entry.state;
     const gear = caps.configure && entry.supports_options;
+    const info = Boolean(panel.settings);
     return html`<div class="entry">
-        <ha-icon icon="mdi:puzzle-outline"></ha-icon>
-        <div class="heading">
-          <div class="title">${this._config?.title || entry.title}</div>
-          <div class="subtitle"><span>${entry.domain}</span><span class="chip ${tone}">${stateText}</span></div>
-        </div>
+        <button class="entry-main" ?disabled=${!info} aria-label=${this._config?.title || entry.title} @click=${() => (this._sheet = { kind: "entry" })}>
+          <ha-icon icon="mdi:puzzle-outline"></ha-icon>
+          <span class="heading">
+            <span class="title">${this._config?.title || entry.title}</span>
+            <span class="subtitle"><span>${entry.domain}</span><span class="chip ${tone}">${stateText}</span></span>
+          </span>
+        </button>
         <div class="tools">
           ${gear ? html`<button class="icon" aria-label=${this.t("menu.configure")} title=${this.t("menu.configure")} ?disabled=${preview} @click=${() => void this._configure()}><ha-icon icon="mdi:cog-outline"></ha-icon></button>` : nothing}
           ${caps.reload ? html`<button class="icon" aria-label=${this.t("menu.more")} aria-haspopup="menu" aria-expanded=${this._menuOpen} ?disabled=${preview} @click=${() => (this._menuOpen = !this._menuOpen)}><ha-icon icon="mdi:dots-vertical"></ha-icon></button>` : nothing}
           ${this._menuOpen ? html`<div class="menu" role="menu"><button role="menuitem" ?disabled=${this._busy} @click=${() => void this._reload()}><ha-icon icon="mdi:reload"></ha-icon>${this._busy ? this.t("menu.reloading") : this.t("menu.reload")}</button></div>` : nothing}
         </div>
       </div>
-      ${this._note ? html`<div class="reason ${this._note.kind === "error" ? "error" : ""}" role="status">${this._note.text}</div>` : nothing}
-      ${panel.settings?.reason ? html`<div class="reason">${panel.settings.reason}</div>` : nothing}`;
+      ${this._note ? html`<div class="reason ${this._note.kind === "error" ? "error" : ""}" role="status">${this._note.text}</div>` : nothing}`;
   }
 
-  private _renderSettings(panel: Panel): TemplateResult {
-    const settings = panel.settings;
-    if (!settings) return html``;
-    const on = (flag: boolean, yes: string, no: string) => this.t(flag ? yes : no);
-    return html`<dl class="facts">
-      <dt>${this.t("settings.source")}</dt><dd>${settings.source}</dd>
-      <dt>${this.t("settings.polling")}</dt><dd>${on(!settings.pref_disable_polling, "settings.polling_on", "settings.polling_off")}</dd>
-      <dt>${this.t("settings.new_entities")}</dt><dd>${on(!settings.pref_disable_new_entities, "settings.new_entities_on", "settings.new_entities_off")}</dd>
-      ${panel.entry.entry_id ? html`<dt>${this.t("settings.entry_id")}</dt><dd>${panel.entry.entry_id}</dd>` : nothing}
-    </dl>`;
-  }
-
+  /** The compact list of Home Assistant's integration page: one row per device, details in a popup. */
   private _renderDevices(panel: Panel): TemplateResult {
     const devices = panel.devices;
     return html`<div class="devices">
       <h2>${this.t("devices.title")}</h2>
-      ${devices.length === 0 ? html`<div class="none">${this.t("card.no_entities")}</div>` : devices.map((device) => this._renderDevice(device, devices.length <= 2))}
+      ${devices.length === 0 ? html`<div class="none">${this.t("card.no_entities")}</div>` : devices.map((device) => this._renderDeviceRow(device))}
     </div>`;
   }
 
-  private _renderDevice(device: PanelDevice, open: boolean): TemplateResult {
+  private _deviceSubtitle(device: PanelDevice): string {
     const type = device.entry_type === "service" ? this.hass.localize("ui.panel.config.devices.type.service_heading") : null;
     const firmware = device.sw_version ? this.hass.localize("ui.panel.config.integrations.config_entry.firmware", "version", device.sw_version) : null;
-    const subtitle = deviceSubtitle(device, type, firmware);
-    return html`<details class="device" ?open=${open}>
-      <summary>
-        <ha-icon icon=${deviceIcon(device)}></ha-icon>
-        <div class="device-text"><div class="device-name">${device.id === null ? this.t("card.no_device") : device.name}</div>${subtitle ? html`<div class="device-info">${subtitle}</div>` : nothing}</div>
-        <ha-icon class="chevron" icon="mdi:chevron-down"></ha-icon>
-      </summary>
-      ${device.groups.map((entry) => this._renderGroup(entry))}
-    </details>`;
+    return deviceSubtitle(device, type, firmware);
+  }
+
+  private _renderDeviceRow(device: PanelDevice): TemplateResult {
+    const subtitle = this._deviceSubtitle(device);
+    return html`<button class="device-row" @click=${() => (this._sheet = { kind: "device", id: device.id })}>
+      <ha-icon icon=${deviceIcon(device)}></ha-icon>
+      <span class="device-text"><span class="device-name">${device.id === null ? this.t("card.no_device") : device.name}</span>${subtitle ? html`<span class="device-info">${subtitle}</span>` : nothing}</span>
+      <ha-icon class="chevron" icon="mdi:chevron-right"></ha-icon>
+    </button>`;
+  }
+
+  /** The popup: a sheet on phones, a dialog on larger screens, like Home Assistant's own pages. */
+  private _renderSheet(panel: Panel): TemplateResult {
+    const sheet = this._sheet as NonNullable<Card["_sheet"]>;
+    const device = sheet.kind === "device" ? panel.devices.find((candidate) => candidate.id === sheet.id) : undefined;
+    const heading = sheet.kind === "device" ? (device ? (device.id === null ? this.t("card.no_device") : device.name) : "") : this._config?.title || panel.entry.title;
+    return html`<dialog class="sheet" @close=${() => (this._sheet = null)} @click=${(event: MouseEvent) => { if (event.target === event.currentTarget) (event.currentTarget as HTMLDialogElement).close(); }}>
+      <header>
+        <button class="icon" aria-label=${this.t("flow.close")} @click=${() => (this.renderRoot.querySelector("dialog.sheet") as HTMLDialogElement).close()}><ha-icon icon="mdi:close"></ha-icon></button>
+        <h2>${heading}</h2>
+      </header>
+      <div class="sheet-body">${sheet.kind === "entry" ? this._renderEntryInfo(panel) : device ? this._renderDeviceInfo(device) : nothing}</div>
+    </dialog>`;
+  }
+
+  private _renderEntryInfo(panel: Panel): TemplateResult {
+    const settings = panel.settings;
+    if (!settings) return html``;
+    const on = (flag: boolean, yes: string, no: string) => this.t(flag ? yes : no);
+    return html`${settings.reason ? html`<div class="reason">${settings.reason}</div>` : nothing}
+      <dl class="facts">
+        <dt>${this.t("settings.integration")}</dt><dd>${panel.entry.domain}</dd>
+        <dt>${this.t("settings.source")}</dt><dd>${settings.source}</dd>
+        <dt>${this.t("settings.polling")}</dt><dd>${on(!settings.pref_disable_polling, "settings.polling_on", "settings.polling_off")}</dd>
+        <dt>${this.t("settings.new_entities")}</dt><dd>${on(!settings.pref_disable_new_entities, "settings.new_entities_on", "settings.new_entities_off")}</dd>
+        ${panel.entry.entry_id ? html`<dt>${this.t("settings.entry_id")}</dt><dd>${panel.entry.entry_id}</dd>` : nothing}
+      </dl>`;
+  }
+
+  private _renderDeviceInfo(device: PanelDevice): TemplateResult {
+    const subtitle = this._deviceSubtitle(device);
+    return html`${subtitle || device.area ? html`<div class="device-meta">${subtitle ? html`<div>${subtitle}</div>` : nothing}${device.area ? html`<div>${this.t("devices.area")}: ${device.area}</div>` : nothing}</div>` : nothing}
+      ${device.groups.map((entry) => this._renderGroup(entry))}`;
   }
 
   private _renderGroup(entry: PanelDevice["groups"][number]): TemplateResult {
     return html`<div class="group"><h3>${this.t(`groups.${entry.group}`)}</h3>${entry.entities.map((entity) => this._renderEntity(entity))}</div>`;
   }
 
+  /** Opens Home Assistant's more-info. The popup closes first: it covers everything, so the dialog would stay hidden behind it. */
   private _renderEntity(entity: PanelEntity): TemplateResult {
     const state = this.hass.states[entity.entity_id];
     const text = state ? (this.hass.formatEntityState?.(state) ?? state.state) : "–";
-    return html`<button class="entity" title=${entity.entity_id} @click=${() => fire(this, "hass-more-info", { entityId: entity.entity_id })}>
+    return html`<button class="entity" title=${entity.entity_id} @click=${() => this._moreInfo(entity.entity_id)}>
       ${state ? html`<ha-state-icon .hass=${this.hass} .stateObj=${state}></ha-state-icon>` : html`<ha-icon icon="mdi:help-circle-outline"></ha-icon>`}
       <span class="name">${entity.name}</span><span class="state">${text}</span>
     </button>`;
+  }
+
+  private _moreInfo(entityId: string): void {
+    (this.renderRoot.querySelector("dialog.sheet") as HTMLDialogElement | null)?.close();
+    fire(this, "hass-more-info", { entityId });
   }
 
   private async _configure(): Promise<void> {

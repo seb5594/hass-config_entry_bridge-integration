@@ -10,9 +10,11 @@
 
 <p align="center">
   <a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=seb5594&amp;repository=hass-config_entry_panel-integration&amp;category=integration"><img src="https://img.shields.io/static/v1?label=HACS%20%C2%B7%20Marketplace&amp;message=Add%20integration&amp;color=41BDF5&amp;logo=homeassistantcommunitystore&amp;logoColor=white&amp;style=for-the-badge" alt="HACS · Marketplace" height="28"></a>
-  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/actions/workflows/compat.yml"><img src="https://img.shields.io/static/v1?label=home%20assistant&amp;message=%E2%89%A5%202024.11.0&amp;color=1877A5&amp;style=for-the-badge" alt="home assistant" height="28"></a><br>
-  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/releases/tag/v2026.11.26b1"><img src="https://img.shields.io/static/v1?label=integration%20version&amp;message=2026.11.26b1&amp;color=1877A5&amp;style=for-the-badge" alt="integration version" height="28"></a>
-  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/releases"><img src="https://img.shields.io/github/downloads/seb5594/hass-config_entry_panel-integration/v2026.11.26b1/total?label=downloads&amp;color=1877A5&amp;style=for-the-badge" alt="downloads" height="28"></a><br>
+  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/actions/workflows/compat.yml"><img src="https://img.shields.io/static/v1?label=home%20assistant&amp;message=%E2%89%A5%202024.7.0&amp;color=1877A5&amp;style=for-the-badge" alt="home assistant" height="28"></a><br>
+  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/releases"><img src="https://img.shields.io/static/v1?label=integration%20version&amp;message=2026.11.26.1&amp;color=1877A5&amp;style=for-the-badge" alt="integration version" height="28"></a>
+  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/releases"><img src="https://img.shields.io/github/downloads/seb5594/hass-config_entry_panel-integration/latest/total?label=downloads&amp;color=1877A5&amp;style=for-the-badge" alt="downloads" height="28"></a><br>
+  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/stargazers"><img src="https://img.shields.io/github/stars/seb5594/hass-config_entry_panel-integration?label=stars&amp;style=flat" alt="stars" height="20"></a>
+  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/forks"><img src="https://img.shields.io/github/forks/seb5594/hass-config_entry_panel-integration?label=forks&amp;style=flat" alt="forks" height="20"></a>
   <a href="https://github.com/seb5594/hass-config_entry_panel-integration/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/seb5594/hass-config_entry_panel-integration/ci.yml?branch=main&amp;label=checks&amp;style=flat" alt="checks" height="20"></a>
   <img src="https://img.shields.io/static/v1?label=tests&amp;message=80%20passed&amp;color=2F855A&amp;style=flat" alt="tests" height="20">
   <img src="https://img.shields.io/static/v1?label=frontend%20size&amp;message=71.2%20KiB&amp;color=1877A5&amp;style=flat" alt="frontend size" height="20">
@@ -31,15 +33,23 @@ Home Assistant keeps the page of an integration entry, with its gear, its ⋮ me
 
 <p align="center"><img src="docs/images/who-sees-what.png" alt="The same card for an administrator, for a listed person and for somebody who is not listed" width="900"></p>
 
+<table>
+  <tr>
+    <td align="center" width="33%"><img src="docs/images/card-dark.png" alt="The card: the entry with its gear and menu, then the devices"><br><sub>First view, as small as the integration page</sub></td>
+    <td align="center" width="33%"><img src="docs/images/device-popup.png" alt="The popup of a device with all its entities"><br><sub>A tap opens all entities</sub></td>
+    <td align="center" width="33%"><img src="docs/images/editor.png" alt="The card editor with people, rights, search and preview"><br><sub>Editor with search and preview</sub></td>
+  </tr>
+</table>
+
 <sub>All images in this README are renderings of the card in a demo environment with sample data.</sub>
 
 ## What you get
 
-- **The entry block of the settings page:** title, integration, state, the gear and a ⋮ menu, then the devices with their entities, grouped like the device page (controls, sensors, configuration, diagnostic).
+- **The entry block of the settings page, as compact as there:** title, integration and state with the gear and a ⋮ menu on the right, then one row per device. A tap on a device opens a popup (a full-screen sheet on phones) with all its entities, grouped like the device page (controls, sensors, configuration, diagnostic); a tap on the entry shows its settings.
 - **The gear for people who are not administrators:** the integration's own options dialog opens in the card and saves, with every field type the integration uses.
 - **Reload from the menu.**
 - **Rights per person:** pick persons, tick what they see (entry settings, devices and entities) and what they may do (gear, reload). Everything is saved and enforced on the server.
-- **Hide entities** for everybody or for one person: tick them, or hide whole families with regular expressions such as `_rssi$`. Hidden entities never leave the server.
+- **Hide entities** for everybody or for one person: search the list and tick them, or hide whole families with regular expressions such as `_rssi$`. Hidden entities never leave the server.
 - **Preview as person:** see the card exactly as a chosen person sees it, before you share anything by accident.
 - **Invisible without rights:** a person who is not listed gets no card, no frame, no hint that it exists.
 - **No manual resource:** the integration serves the card and registers it by itself.
@@ -94,11 +104,11 @@ Hiding patterns are checked on the server: very long ones and ones that could ru
 
 | | |
 | --- | --- |
-| Home Assistant | **2024.11 and newer.** Tested for real, with the real core, on 2024.11, 2025.1, 2025.12, 2026.2 and 2026.9 (Python 3.12 to 3.14); the compatibility workflow keeps testing the releases that follow. |
+| Home Assistant | **2024.7 and newer.** Tested for real, with the real core, from 2024.7 to 2026.9 (Python 3.12 to 3.14); the compatibility workflow keeps testing the releases that follow and lowers the minimum as far as the tests pass. |
 | Dashboards | Masonry and sections view, edit mode, YAML mode. The card reports its size to the sections layout. |
-| Browsers | Current Chrome, Edge, Firefox and Safari, and the Home Assistant apps. |
+| Browsers and phones | Current Chrome, Edge, Firefox and Safari and the Home Assistant apps. Built for phones first: nothing is wider than the screen, popups are full-screen sheets, targets are 44 px. |
 | Installation | HACS and the Marketplace (category *Integration*), or copy `custom_components/config_entry_panel` by hand. |
-| Size | One 72 kB script, loaded only on pages that show dashboards. |
+| Size | One 78 kB script, loaded only on pages that show dashboards. |
 
 Suggested GitHub topics for the repository: `home-assistant`, `hacs`, `hacs-integration`, `home-assistant-custom-component`, `lovelace`, `lovelace-card`, `dashboard`, `config-entry`, `options-flow`, `permissions`.
 
@@ -127,7 +137,7 @@ The Python side has plain unit tests in `.github/tests` and tests against a real
 
 ## Releases
 
-The first releases are **pre-releases** (`2026.11.26b1`, `b2` …) until the panel has proven itself. Versions follow `YYYY.MM.DD`, with `.1`, `.2` for further builds of a day.
+Versions follow `YYYY.MM.DD`, with `.1`, `.2` for further builds of a day. A new version on `main` publishes the HACS ZIP as the latest release.
 
 <!-- support:begin (generated, shared text) -->
 ## Say thanks

@@ -1,6 +1,6 @@
 {
   "card": {
-    "name": "Config entry panel",
+    "name": "Config Entry Panel",
     "description": "An integration entry with its gear, menu and devices, for people who are not administrators.",
     "pick_entry": "Choose a config entry in the card editor.",
     "entry_missing": "This config entry does not exist (any more).",
@@ -21,10 +21,12 @@
     "new_entities": "New entities",
     "new_entities_on": "added automatically",
     "new_entities_off": "stay disabled",
-    "entry_id": "Entry ID"
+    "entry_id": "Entry ID",
+    "integration": "Integration"
   },
   "devices": {
-    "title": "Devices"
+    "title": "Devices",
+    "area": "Area"
   },
   "groups": {
     "control": "Controls",
@@ -87,7 +89,8 @@
     "pattern_invalid": "This is not a valid regular expression, or one that could run too long.",
     "entities": "Entities",
     "entities_none": "This config entry has no entities.",
-    "entities_filter": "Filter the list",
-    "count_hidden": "{count} hidden"
+    "entities_filter": "Search entities",
+    "count_hidden": "{count} hidden",
+    "no_match": "No entity matches your search."
   }
 }

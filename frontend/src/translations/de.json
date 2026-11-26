@@ -21,10 +21,12 @@
     "new_entities": "Neue Entitäten",
     "new_entities_on": "werden automatisch hinzugefügt",
     "new_entities_off": "bleiben deaktiviert",
-    "entry_id": "Eintrags-ID"
+    "entry_id": "Eintrags-ID",
+    "integration": "Integration"
   },
   "devices": {
-    "title": "Geräte"
+    "title": "Geräte",
+    "area": "Bereich"
   },
   "groups": {
     "control": "Steuerelemente",
@@ -87,7 +89,8 @@
     "pattern_invalid": "Das ist kein gültiger regulärer Ausdruck, oder einer, der zu lange laufen könnte.",
     "entities": "Entitäten",
     "entities_none": "Dieser Konfigurationseintrag hat keine Entitäten.",
-    "entities_filter": "Liste filtern",
-    "count_hidden": "{count} ausgeblendet"
+    "entities_filter": "Entitäten suchen",
+    "count_hidden": "{count} ausgeblendet",
+    "no_match": "Keine Entität passt zur Suche."
   }
 }

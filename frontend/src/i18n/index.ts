@@ -15,6 +15,8 @@ export const BUNDLED: Record<string, Tree> = { en, de, fr, es, it, nl };
 
 /** Our key -> the key Home Assistant uses for the same word. */
 export const HOME_ASSISTANT_KEYS: Record<string, string> = {
+  "settings.integration": "ui.panel.config.entities.picker.headers.integration",
+  "devices.area": "ui.panel.config.entities.picker.headers.area",
   "devices.title": "ui.panel.config.integrations.integration_page.entries_device",
   "groups.control": "ui.panel.config.devices.entities.control",
   "groups.sensor": "ui.panel.config.devices.entities.sensor",

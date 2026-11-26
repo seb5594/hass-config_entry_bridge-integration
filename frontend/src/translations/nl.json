@@ -21,10 +21,12 @@
     "new_entities": "Nieuwe entiteiten",
     "new_entities_on": "worden automatisch toegevoegd",
     "new_entities_off": "blijven uitgeschakeld",
-    "entry_id": "Item-ID"
+    "entry_id": "Item-ID",
+    "integration": "Integratie"
   },
   "devices": {
-    "title": "Apparaten"
+    "title": "Apparaten",
+    "area": "Gebied"
   },
   "groups": {
     "control": "Bedieningselementen",
@@ -87,7 +89,8 @@
     "pattern_invalid": "Dit is geen geldige reguliere expressie, of een die te lang zou kunnen duren.",
     "entities": "Entiteiten",
     "entities_none": "Dit configuratie-item bevat geen entiteiten.",
-    "entities_filter": "De lijst filteren",
-    "count_hidden": "{count} verborgen"
+    "entities_filter": "Entiteiten zoeken",
+    "count_hidden": "{count} verborgen",
+    "no_match": "Geen entiteit komt overeen met de zoekopdracht."
   }
 }

@@ -15,19 +15,27 @@ async function shoot(page, name, selector) {
 
 (async () => {
   const browser = await chromium.launch();
-  const scale = { width: 560, height: 900 };
+  const phone = { width: 390, height: 780 };
   try {
-    // The gear and the menu of a person who may configure and reload.
-    let page = await open(browser, "dark", scale);
+    // The first view, as small as Home Assistant's own integration page: the entry with its gear and menu, then the devices.
+    let page = await open(browser, "dark", phone);
     await mount(page, "anna");
     await page.locator("#card-u-anna").locator("button[aria-haspopup=menu]").click();
     await page.waitForTimeout(150);
     await shoot(page, "card-dark.png", ".slot");
 
-    // A person who only sees the devices, in the light theme.
-    page = await open(browser, "light", scale);
+    // The same for a person who only sees the devices, in the light theme.
+    page = await open(browser, "light", phone);
     await mount(page, "ben");
     await shoot(page, "card-light.png", ".slot");
+
+    // A tap on a device opens all its entities, like the device page for administrators.
+    page = await open(browser, "dark", phone);
+    await mount(page, "anna");
+    await page.locator("#card-u-anna").locator("button.device-row", { hasText: "Depot Nord" }).click();
+    await page.locator("#card-u-anna").locator("dialog.sheet").waitFor({ state: "visible" });
+    await page.waitForTimeout(150);
+    await shoot(page, "device-popup.png");
 
     // The options dialog (the gear), driven by the integration's real flow protocol.
     page = await open(browser, "dark", { width: 640, height: 560 });
@@ -48,15 +56,18 @@ async function shoot(page, name, selector) {
     await shoot(page, "who-sees-what.png", "#root");
 
     // The editor: people, rights, hiding and the preview.
-    page = await open(browser, "dark", { width: 580, height: 1500 });
+    page = await open(browser, "dark", { width: 390, height: 1500 });
     await page.evaluate(async () => {
       const editor = document.createElement("config-entry-panel-editor");
       editor.setConfig({ type: "custom:config-entry-panel", entry_id: "e1" });
       editor.hass = window.fake.makeHass({ id: "u-root", name: "Root", is_admin: true });
-      const slot = document.createElement("div"); slot.className = "slot"; slot.style.maxWidth = "520px"; slot.append(editor);
+      const slot = document.createElement("div"); slot.className = "slot"; slot.append(editor);
       document.getElementById("root").append(slot);
       await new Promise((r) => setTimeout(r, 600));
+      editor.shadowRoot.querySelector("details.person")?.setAttribute("open", "");
+      editor.shadowRoot.querySelector("details.hide")?.setAttribute("open", "");
     });
+    await page.waitForTimeout(200);
     await shoot(page, "editor.png", ".slot");
   } finally {
     await browser.close();

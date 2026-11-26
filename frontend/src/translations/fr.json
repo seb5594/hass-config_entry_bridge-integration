@@ -1,6 +1,6 @@
 {
   "card": {
-    "name": "Panneau de configuration",
+    "name": "Config Entry Panel",
     "description": "Une entrée d'intégration avec son engrenage, son menu et ses appareils, destinée aux personnes qui ne sont pas administrateurs.",
     "pick_entry": "Choisissez une entrée de configuration dans l'éditeur de cartes.",
     "entry_missing": "Cette entrée de configuration n'existe pas (plus).",
@@ -21,10 +21,12 @@
     "new_entities": "Nouvelles entités",
     "new_entities_on": "ajoutées automatiquement",
     "new_entities_off": "restent désactivées",
-    "entry_id": "Identifiant de l'entrée"
+    "entry_id": "Identifiant de l'entrée",
+    "integration": "Intégration"
   },
   "devices": {
-    "title": "Appareils"
+    "title": "Appareils",
+    "area": "Zone"
   },
   "groups": {
     "control": "Commandes",
@@ -87,7 +89,8 @@
     "pattern_invalid": "Ce n'est pas une expression régulière valide, ou elle pourrait s'exécuter trop longtemps.",
     "entities": "Entités",
     "entities_none": "Cette entrée de configuration ne contient aucune entité.",
-    "entities_filter": "Filtrer la liste",
-    "count_hidden": "{count} masquées"
+    "entities_filter": "Rechercher des entités",
+    "count_hidden": "{count} masquées",
+    "no_match": "Aucune entité ne correspond à la recherche."
   }
 }

@@ -50,25 +50,64 @@ if (require.main === module) {
   (async () => {
     const browser = await chromium.launch();
     try {
-      // 1. visibility and filtering per person
-      let page = await open(browser);
+      // 1. the first view is compact; the details are in a popup; rights and filters apply per person
+      let page = await open(browser, "dark", { width: 390, height: 844 });
       const anna = await mount(page, "anna");
       assert.equal(anna.hidden, false);
       assert.match(anna.text, /Depot Nord - 000123/);
-      assert.match(anna.text, /Next shift/);
-      assert.doesNotMatch(anna.text, /Last sync/, "Anna's own rule hides the last sync");
-      assert.doesNotMatch(anna.text, /API signal strength/, "the entry-wide pattern hides the signal strength");
+      assert.match(anna.text, /Wall Display/, "devices are listed as rows");
+      assert.doesNotMatch(anna.text, /Next shift|Controls/, "entities are not part of the first view");
+      const sheet = async (user, device) => {
+        const card = page.locator(`#card-${user}`);
+        await card.locator("button.device-row", { hasText: device }).click();
+        const dialog = card.locator("dialog.sheet");
+        await dialog.waitFor({ state: "visible" });
+        return { card, dialog, text: await dialog.innerText() };
+      };
+      let popup = await sheet("u-anna", "Depot Nord");
+      assert.match(popup.text, /Next shift/);
+      assert.match(popup.text, /controls/i);
+      assert.doesNotMatch(popup.text, /Last sync/, "Anna's own rule hides the last sync");
+      assert.doesNotMatch(popup.text, /API signal strength/, "the entry-wide pattern hides the signal strength");
+      const box = await popup.dialog.boundingBox();
+      assert.ok(box.width >= 389 && box.height >= 843, "on a phone the popup fills the screen");
+      await popup.dialog.locator("button[aria-label='Close']").click();
+      await popup.dialog.waitFor({ state: "detached" });
+      const entryInfo = page.locator("#card-u-anna");
+      await entryInfo.locator("button.entry-main").click();
+      assert.match(await entryInfo.locator("dialog.sheet").innerText(), /Polling for updates/);
+      await page.keyboard.press("Escape");
+      await entryInfo.locator("dialog.sheet").waitFor({ state: "detached" });
       const carl = await mount(page, "carl");
       assert.deepEqual([carl.hidden, carl.height, carl.events.at(-1)], [true, 0, false], "an unlisted user does not see the card at all");
       const ben = await mount(page, "ben");
-      assert.doesNotMatch(ben.text, /Source|Polling/, "Ben has no settings section");
+      assert.equal(await page.locator("#card-u-ben button.entry-main").isDisabled(), true, "Ben has no settings section: the entry row opens nothing");
       assert.match(ben.text, /Wall Display/);
-      const root = await mount(page, "root");
-      assert.match(root.text, /Last sync/);
-      assert.match(root.text, /API signal strength/, "administrators see every entity");
+      await mount(page, "root");
+      popup = await sheet("u-root", "Depot Nord");
+      assert.match(popup.text, /Last sync/);
+      assert.match(popup.text, /API signal strength/, "administrators see every entity");
+      await popup.dialog.locator("button[aria-label='Close']").click();
       const preview = await mount(page, "root", { preview: "person.carl" });
       assert.match(preview.text, /Carl does not see this card at all/);
       assert.deepEqual(page.errors, []);
+      await page.close();
+
+      // 1b. a tap on an entity closes the popup and opens Home Assistant's more-info
+      page = await open(browser, "dark", { width: 390, height: 844 });
+      await mount(page, "anna");
+      await page.evaluate(() => { window.__moreInfo = []; document.addEventListener("hass-more-info", (event) => window.__moreInfo.push(event.detail.entityId)); });
+      popup = await sheet("u-anna", "Depot Nord");
+      await popup.dialog.locator("button.entity", { hasText: "Next shift" }).click();
+      assert.deepEqual(await page.evaluate(() => window.__moreInfo), ["calendar.next_shift"]);
+      await page.locator("#card-u-anna dialog.sheet").waitFor({ state: "detached", timeout: 3000 }); // the popup made room for the dialog of Home Assistant
+      await page.close();
+
+      // 1c. the card picker lists the product name in title case and the description in the user's language
+      page = await open(browser);
+      assert.equal(await page.evaluate(() => window.customCards.find((c) => c.type === "config-entry-panel").name), "Config Entry Panel");
+      await page.evaluate(() => { const root = document.createElement("home-assistant"); root.hass = { language: "de" }; document.body.append(root); });
+      assert.match(await page.evaluate(() => window.customCards.find((c) => c.type === "config-entry-panel").description), /Zahnrad/);
       await page.close();
 
       // 2. the gear: the options flow runs in a dialog and saves
@@ -105,28 +144,43 @@ if (require.main === module) {
       assert.deepEqual(page.errors, []);
       await page.close();
 
-      // 4. the editor manages people and previews them
-      page = await open(browser);
+      // 4. the editor manages people and previews them, and fits a phone
+      page = await open(browser, "dark", { width: 390, height: 844 });
       const result = await page.evaluate(async () => {
         const editor = document.createElement("config-entry-panel-editor");
-        const changes = [];
-        editor.addEventListener("config-changed", (event) => changes.push(event.detail.config));
         editor.setConfig({ type: "custom:config-entry-panel", entry_id: "e1" });
         editor.hass = window.fake.makeHass({ id: "u-root", name: "Root", is_admin: true });
         document.getElementById("root").append(editor);
-        await new Promise((r) => setTimeout(r, 400));
+        await new Promise((r) => setTimeout(r, 500));
         const q = (s) => [...editor.shadowRoot.querySelectorAll(s)];
         const add = q("select").find((s) => [...s.options].some((o) => o.value === "person.carl"));
         add.value = "person.carl"; add.dispatchEvent(new Event("change"));
         add.parentElement.querySelector("button").click();
         await new Promise((r) => setTimeout(r, 400));
-        return { carl: window.fake.state.policy.people["person.carl"], text: editor.shadowRoot.textContent.replace(/\s+/g, " "), previewHidden: editor.shadowRoot.querySelector("config-entry-panel")?.hasAttribute("hidden"), changes };
+        // open the hiding section and search
+        const hide = q("details.hide")[0];
+        hide.open = true;
+        const search = hide.querySelector("input[type=search]");
+        const visibleBefore = hide.querySelectorAll(".scroll label.check").length;
+        search.value = "rssi"; search.dispatchEvent(new Event("input"));
+        await new Promise((r) => setTimeout(r, 100));
+        const found = [...editor.shadowRoot.querySelectorAll("details.hide")[0].querySelectorAll(".scroll label.check")].map((l) => l.textContent.trim());
+        search.value = "zzz"; search.dispatchEvent(new Event("input"));
+        await new Promise((r) => setTimeout(r, 100));
+        const none = editor.shadowRoot.querySelectorAll("details.hide")[0].querySelector(".scroll").textContent;
+        return { carl: window.fake.state.policy.people["person.carl"], text: editor.shadowRoot.textContent.replace(/\s+/g, " "),
+          previewHidden: editor.shadowRoot.querySelector("config-entry-panel")?.hasAttribute("hidden"), visibleBefore, found, none,
+          overflow: [document.documentElement.scrollWidth, document.documentElement.clientWidth, editor.scrollWidth, editor.clientWidth] };
       });
       assert.deepEqual(result.carl.sections, ["settings", "devices"]);
       assert.equal(result.carl.configure, false, "a new person may change nothing");
       assert.match(result.text, /Anna.*User/);
-      assert.match(result.text, /Root|Ben/);
       assert.equal(result.previewHidden, false, "the preview of a listed person shows their view");
+      assert.equal(result.visibleBefore, 8, "all entities are listed before searching");
+      assert.deepEqual(result.found.length, 1, "the search narrows the list");
+      assert.match(result.found[0], /API signal strength/);
+      assert.match(result.none, /No entity matches/);
+      assert.ok(result.overflow[0] <= result.overflow[1] && result.overflow[2] <= result.overflow[3], `nothing is wider than the phone: ${result.overflow}`);
       assert.deepEqual(page.errors, []);
       await page.close();
       console.log("e2e: all checks passed");

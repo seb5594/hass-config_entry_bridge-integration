@@ -9,7 +9,7 @@ const ICONS = {
   "mdi:help-circle-outline": mdi.mdiHelpCircleOutline, "mdi:shape-outline": mdi.mdiShapeOutline, "mdi:alert-circle-outline": mdi.mdiAlertCircleOutline,
   "mdi:calendar-clock": mdi.mdiCalendarClock, "mdi:thermometer": mdi.mdiThermometer, "mdi:bell-outline": mdi.mdiBellOutline,
   "mdi:lightbulb-outline": mdi.mdiLightbulbOutline, "mdi:signal": mdi.mdiSignal, "mdi:toggle-switch-outline": mdi.mdiToggleSwitchOutline,
-  "mdi:clock-outline": mdi.mdiClockOutline, "mdi:counter": mdi.mdiCounter,
+  "mdi:clock-outline": mdi.mdiClockOutline, "mdi:close": mdi.mdiClose, "mdi:chevron-right": mdi.mdiChevronRight, "mdi:counter": mdi.mdiCounter,
 };
 
 /** Registers the elements Home Assistant would provide. */

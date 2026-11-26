@@ -27,19 +27,22 @@ export class ConfigEntryPanelEditor extends LitElement {
   };
 
   static override styles = css`
-    :host { display: block; }
-    .stack { display: grid; gap: 22px; }
+    :host { display: block; min-width: 0; max-width: 100%; }
+    .stack { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
+    .stack > *, fieldset, label, details, .body, .row { min-width: 0; }
+    p, span, legend, summary { overflow-wrap: anywhere; }
     h3 { margin: 0 0 4px; font-size: 1rem; font-weight: 500; }
     .hint { color: var(--secondary-text-color); font-size: 0.85rem; margin: 2px 0 8px; }
     .note { padding: 8px 12px; border-radius: 8px; background: var(--secondary-background-color); font-size: 0.85rem; color: var(--secondary-text-color); }
     .warn { padding: 8px 12px; border-radius: 8px; background: color-mix(in srgb, var(--warning-color, #ff9800) 18%, transparent); font-size: 0.85rem; }
     label.field { display: grid; gap: 4px; font-size: 0.85rem; color: var(--secondary-text-color); }
-    select, input[type="text"] { width: 100%; box-sizing: border-box; padding: 10px 12px; font: inherit; color: var(--primary-text-color); background: var(--card-background-color); border: 1px solid var(--divider-color); border-radius: 8px; }
+    select, input[type="text"], input[type="search"] { width: 100%; box-sizing: border-box; padding: 10px 12px; font: inherit; color: var(--primary-text-color); background: var(--card-background-color); border: 1px solid var(--divider-color); border-radius: 8px; }
     input.invalid { border-color: var(--error-color); }
     label.check { display: flex; align-items: flex-start; gap: 8px; padding: 4px 0; cursor: pointer; color: var(--primary-text-color); }
     label.check input { margin-top: 3px; accent-color: var(--primary-color); }
     .row { display: flex; gap: 8px; align-items: center; }
-    .row > :first-child { flex: 1; }
+    .row > :first-child { flex: 1; min-width: 0; }
+    .row > button { flex: none; }
     button { font: inherit; cursor: pointer; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--divider-color); background: transparent; color: var(--primary-color); }
     button.danger { color: var(--error-color); }
     button:disabled { opacity: 0.5; cursor: default; }
@@ -53,8 +56,14 @@ export class ConfigEntryPanelEditor extends LitElement {
     fieldset { border: 0; padding: 0; margin: 0; }
     legend { padding: 0; font-size: 0.8rem; color: var(--secondary-text-color); text-transform: uppercase; letter-spacing: 0.05em; }
     .device-title { margin: 10px 0 2px; font-weight: 500; font-size: 0.9rem; color: var(--primary-text-color); }
-    .entity-id { color: var(--secondary-text-color); font-size: 0.8rem; margin-left: 6px; }
-    .scroll { max-height: 260px; overflow: auto; border: 1px solid var(--divider-color); border-radius: 8px; padding: 4px 12px 8px; }
+    .entity-id { display: block; color: var(--secondary-text-color); font-size: 0.78rem; overflow-wrap: anywhere; }
+    details.hide { border: 1px solid var(--divider-color); border-radius: 12px; }
+    details.hide > summary { display: flex; justify-content: space-between; gap: 8px; align-items: center; padding: 12px; cursor: pointer; list-style: none; font-weight: 500; }
+    details.hide > summary::-webkit-details-marker { display: none; }
+    details.hide > summary .count { font-weight: 400; font-size: 0.85rem; color: var(--secondary-text-color); white-space: nowrap; }
+    details.hide > .inner { padding: 0 12px 12px; display: grid; gap: 12px; }
+    input.search { margin-bottom: 8px; }
+    .scroll { max-height: min(50vh, 360px); overflow: auto; border: 1px solid var(--divider-color); border-radius: 8px; padding: 4px 12px 8px; }
     .status { font-size: 0.85rem; }
     .status.saved { color: var(--success-color, #43a047); }
     .status.error { color: var(--error-color); }
@@ -205,7 +214,7 @@ export class ConfigEntryPanelEditor extends LitElement {
       }}>${label}</label>`;
     const action = (name: "configure" | "reload", label: string) => html`<label class="check"><input type="checkbox" .checked=${rule[name]}
       @change=${(event: Event) => void this._setRule(personId, { ...rule, [name]: (event.target as HTMLInputElement).checked })}>${label}</label>`;
-    return html`<details class="person" open>
+    return html`<details class="person">
       <summary>
         ${person.picture ? html`<img class="avatar" src=${person.picture} alt="">` : html`<span class="avatar"><ha-icon icon="mdi:account"></ha-icon></span>`}
         <span class="who">${person.name}<span class="chip">${this.t(`editor.role_${person.role}`)}</span></span>
@@ -233,37 +242,41 @@ export class ConfigEntryPanelEditor extends LitElement {
       this.t("editor.hide_title"), this.t("editor.hide_hint"));
   }
 
-  /** Patterns and a checkbox list: the two ways to hide entities, for the whole card or for one person. */
+  /** Patterns and a searchable checkbox list: the two ways to hide entities, for the whole card or for one person. */
   private _renderHiding(scope: string, patterns: string[], hidden: string[], onPatterns: (value: string[]) => Promise<void>, onEntities: (value: string[]) => Promise<void>, title: string, hint: string): TemplateResult {
     const all = this._access?.entities ?? [];
-    const filter = (this._filters[scope] ?? "").toLowerCase();
-    const shown = filter ? all.filter((entity) => entity.entity_id.includes(filter) || entity.name.toLowerCase().includes(filter)) : all;
+    const query = (this._filters[scope] ?? "").trim().toLowerCase();
+    const shown = query ? all.filter((entity) => entity.entity_id.includes(query) || entity.name.toLowerCase().includes(query)) : all;
     const devices = new Map((this._access?.devices ?? []).map((device) => [device.id, device.name]));
     const groups = [...new Set(shown.map((entity) => entity.device_id))];
     const toggle = (id: string, on: boolean) => (on ? [...new Set([...hidden, id])] : hidden.filter((item) => item !== id));
-    return html`<div>
-      ${scope === "global" ? html`<h3>${title}</h3>` : html`<h3 style="font-size:.9rem">${title}</h3>`}
-      ${hint ? html`<p class="hint">${hint}</p>` : nothing}
-      <fieldset><legend>${this.t("editor.patterns")}</legend>
-        <p class="hint">${this.t("editor.pattern_hint")}</p>
-        ${patterns.map((pattern, index) => html`<div class="row" style="margin-bottom:6px">
-          <input type="text" class=${isValidPattern(pattern) ? "" : "invalid"} .value=${pattern}
-            @change=${(event: Event) => { const value = (event.target as HTMLInputElement).value; if (isValidPattern(value) || value === "") void onPatterns(patterns.map((item, at) => (at === index ? value : item)).filter(Boolean)); else (event.target as HTMLInputElement).classList.add("invalid"); }}>
-          <button class="danger" aria-label=${this.t("editor.remove")} @click=${() => void onPatterns(patterns.filter((_, at) => at !== index))}>×</button>
-        </div>`)}
-        <button @click=${() => void onPatterns([...patterns, NEW_PATTERN])}>${this.t("editor.pattern_add")}</button>
-        <p class="hint" style="margin-top:6px">${this.t("editor.pattern_invalid")}</p>
-      </fieldset>
-      <fieldset style="margin-top:12px"><legend>${this.t("editor.entities")} · ${this.t("editor.count_hidden", { count: hidden.length })}</legend>
-        ${all.length === 0 ? html`<p class="hint">${this.t("editor.entities_none")}</p>` : html`
-          ${all.length > FILTER_FROM ? html`<input type="text" placeholder=${this.t("editor.entities_filter")} .value=${this._filters[scope] ?? ""} @input=${(event: Event) => (this._filters = { ...this._filters, [scope]: (event.target as HTMLInputElement).value })}>` : nothing}
-          <div class="scroll">${groups.map((deviceId) => html`
-            <div class="device-title">${deviceId ? devices.get(deviceId) ?? deviceId : this.t("card.no_device")}</div>
-            ${shown.filter((entity) => entity.device_id === deviceId).map((entity) => html`<label class="check">
-              <input type="checkbox" .checked=${hidden.includes(entity.entity_id)} @change=${(event: Event) => void onEntities(toggle(entity.entity_id, (event.target as HTMLInputElement).checked))}>
-              <span>${entity.name}<span class="entity-id">${entity.entity_id}</span></span></label>`)}`)}</div>`}
-      </fieldset>
-    </div>`;
+    const count = hidden.length + patterns.length;
+    return html`<details class="hide">
+      <summary><span>${title}</span><span class="count">${this.t("editor.count_hidden", { count })}</span></summary>
+      <div class="inner">
+        ${hint ? html`<p class="hint">${hint}</p>` : nothing}
+        <fieldset><legend>${this.t("editor.entities")}</legend>
+          ${all.length === 0 ? html`<p class="hint">${this.t("editor.entities_none")}</p>` : html`
+            <input type="search" class="search" aria-label=${this.t("editor.entities_filter")} placeholder=${this.t("editor.entities_filter")} .value=${this._filters[scope] ?? ""}
+              @input=${(event: Event) => (this._filters = { ...this._filters, [scope]: (event.target as HTMLInputElement).value })}>
+            <div class="scroll">${shown.length === 0 ? html`<p class="hint">${this.t("editor.no_match")}</p>` : groups.map((deviceId) => html`
+              <div class="device-title">${deviceId ? devices.get(deviceId) ?? deviceId : this.t("card.no_device")}</div>
+              ${shown.filter((entity) => entity.device_id === deviceId).map((entity) => html`<label class="check">
+                <input type="checkbox" .checked=${hidden.includes(entity.entity_id)} @change=${(event: Event) => void onEntities(toggle(entity.entity_id, (event.target as HTMLInputElement).checked))}>
+                <span>${entity.name}<span class="entity-id">${entity.entity_id}</span></span></label>`)}`)}</div>`}
+        </fieldset>
+        <fieldset><legend>${this.t("editor.patterns")}</legend>
+          <p class="hint">${this.t("editor.pattern_hint")}</p>
+          ${patterns.map((pattern, index) => html`<div class="row" style="margin-bottom:6px">
+            <input type="text" class=${isValidPattern(pattern) ? "" : "invalid"} .value=${pattern}
+              @change=${(event: Event) => { const value = (event.target as HTMLInputElement).value; if (isValidPattern(value) || value === "") void onPatterns(patterns.map((item, at) => (at === index ? value : item)).filter(Boolean)); else (event.target as HTMLInputElement).classList.add("invalid"); }}>
+            <button class="danger" aria-label=${this.t("editor.remove")} @click=${() => void onPatterns(patterns.filter((_, at) => at !== index))}>×</button>
+          </div>`)}
+          <button @click=${() => void onPatterns([...patterns, NEW_PATTERN])}>${this.t("editor.pattern_add")}</button>
+          <p class="hint" style="margin-top:6px">${this.t("editor.pattern_invalid")}</p>
+        </fieldset>
+      </div>
+    </details>`;
   }
 
   private _renderPreview(): TemplateResult {

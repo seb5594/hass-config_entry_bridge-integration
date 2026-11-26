@@ -1,14 +1,21 @@
 {
   "domain": "config_entry_panel",
   "name": "Config Entry Panel",
-  "codeowners": ["@seb5594"],
+  "codeowners": [
+    "@seb5594"
+  ],
   "config_flow": true,
-  "dependencies": ["frontend", "http", "person", "websocket_api"],
+  "dependencies": [
+    "frontend",
+    "http",
+    "person",
+    "websocket_api"
+  ],
   "documentation": "https://github.com/seb5594/hass-config_entry_panel-integration",
   "integration_type": "service",
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/seb5594/hass-config_entry_panel-integration/issues",
-  "single_config_entry": true,
   "requirements": [],
-  "version": "2026.11.26b1"
+  "single_config_entry": true,
+  "version": "2026.11.26.1"
 }

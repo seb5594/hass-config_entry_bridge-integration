@@ -1,6 +1,6 @@
 {
   "card": {
-    "name": "Pannello delle voci di configurazione",
+    "name": "Config Entry Panel",
     "description": "Una voce di integrazione con il suo ingranaggio, il menu e i dispositivi, per persone che non sono amministratori.",
     "pick_entry": "Scegli una voce di configurazione nell'editor delle schede.",
     "entry_missing": "Questa voce di configurazione non esiste (più).",
@@ -21,10 +21,12 @@
     "new_entities": "Nuove entità",
     "new_entities_on": "aggiunte automaticamente",
     "new_entities_off": "restano disattivate",
-    "entry_id": "ID voce"
+    "entry_id": "ID voce",
+    "integration": "Integrazione"
   },
   "devices": {
-    "title": "Dispositivi"
+    "title": "Dispositivi",
+    "area": "Area"
   },
   "groups": {
     "control": "Comandi",
@@ -87,7 +89,8 @@
     "pattern_invalid": "Questa non è un'espressione regolare valida, oppure potrebbe richiedere troppo tempo per essere eseguita.",
     "entities": "Entità",
     "entities_none": "Questa voce di configurazione non contiene entità.",
-    "entities_filter": "Filtra l'elenco",
-    "count_hidden": "{count} nascoste"
+    "entities_filter": "Cerca entità",
+    "count_hidden": "{count} nascoste",
+    "no_match": "Nessuna entità corrisponde alla ricerca."
   }
 }
