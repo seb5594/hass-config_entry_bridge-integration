@@ -34,7 +34,7 @@ export class ConfigEntryPanelEditor extends LitElement {
     h3 { margin: 0 0 4px; font-size: 1rem; font-weight: 500; }
     .hint { color: var(--secondary-text-color); font-size: 0.85rem; margin: 2px 0 8px; }
     .note { padding: 8px 12px; border-radius: 8px; background: var(--secondary-background-color); font-size: 0.85rem; color: var(--secondary-text-color); }
-    .warn { padding: 8px 12px; border-radius: 8px; background: color-mix(in srgb, var(--warning-color, #ff9800) 18%, transparent); font-size: 0.85rem; }
+    .warn { padding: 8px 12px; border-radius: 8px; background: var(--secondary-background-color); background: color-mix(in srgb, var(--warning-color, #ff9800) 18%, transparent); font-size: 0.85rem; }
     label.field { display: grid; gap: 4px; font-size: 0.85rem; color: var(--secondary-text-color); }
     select, input[type="text"], input[type="search"] { width: 100%; box-sizing: border-box; padding: 10px 12px; font: inherit; color: var(--primary-text-color); background: var(--card-background-color); border: 1px solid var(--divider-color); border-radius: 8px; }
     input.invalid { border-color: var(--error-color); }

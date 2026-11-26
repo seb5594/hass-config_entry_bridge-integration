@@ -17,5 +17,5 @@
   "issue_tracker": "https://github.com/seb5594/hass-config_entry_panel-integration/issues",
   "requirements": [],
   "single_config_entry": true,
-  "version": "2026.11.26.2"
+  "version": "2026.11.26.3"
 }

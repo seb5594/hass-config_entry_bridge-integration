@@ -71,7 +71,7 @@ Ausblende-Muster werden auf dem Server geprüft: sehr lange und solche, die minu
 
 | | |
 | --- | --- |
-| Home Assistant | **2024.7 und neuer.** Echt getestet, mit dem echten Core, von 2024.7 bis 2026.9 (Python 3.12 bis 3.14); der Compatibility-Workflow testet die folgenden Releases weiter und senkt das Minimum, soweit die Tests bestehen. |
+| Home Assistant | **2024.7 und neuer.** Echt getestet, mit dem echten Core, von 2024.6 bis 2026.9 (Python 3.12 bis 3.14; der Compatibility-Workflow testet ab 2024.7); der Compatibility-Workflow testet die folgenden Releases weiter und senkt das Minimum, soweit die Tests bestehen. |
 | Dashboards | Masonry- und Bereichsansicht, Bearbeitungsmodus, YAML-Modus. Die Karte meldet ihre Größe an das Bereichslayout. |
 | Browser und Smartphones | Aktuelle Versionen von Chrome, Edge, Firefox und Safari sowie die Home-Assistant-Apps. Smartphone zuerst gebaut: nichts ist breiter als der Bildschirm, Popups sind Vollbild-Sheets, Touch-Ziele haben 44 px. |
 | Installation | HACS und Marketplace (Kategorie *Integration*), oder `custom_components/config_entry_panel` von Hand kopieren. |

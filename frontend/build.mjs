@@ -9,7 +9,7 @@ const options = {
   outfile: "../custom_components/config_entry_panel/frontend/config-entry-panel.js",
   bundle: true,
   format: "esm",
-  target: "es2022",
+  target: "es2020",
   minify: true,
   legalComments: "none",
   loader: { ".json": "json" },

@@ -22,10 +22,13 @@ async def async_register_frontend(hass: HomeAssistant, version: str) -> bool:
     if hass.http is None or not card.is_file():
         _LOGGER.warning("The card file %s is missing; the panel works, but the card cannot be shown", card)
         return False
-    from homeassistant.components.http import StaticPathConfig
-
     url = f"{URL_BASE}/{CARD_FILE}"
-    await hass.http.async_register_static_paths([StaticPathConfig(url, str(card), cache_headers=False)])
+    try:
+        from homeassistant.components.http import StaticPathConfig
+
+        await hass.http.async_register_static_paths([StaticPathConfig(url, str(card), cache_headers=False)])
+    except ImportError:  # before Home Assistant 2024.7
+        hass.http.register_static_path(url, str(card), cache_headers=False)
     # The version in the address makes browsers fetch a new card after an update.
     versioned = f"{url}?v={version}"
     try:

@@ -41,7 +41,7 @@ export const cardStyles = css`
   .device-name { display: block; font-size: 1rem; color: var(--primary-text-color); overflow-wrap: anywhere; }
   .device-info { display: block; font-size: 0.82rem; color: var(--secondary-text-color); overflow-wrap: anywhere; }
   .chevron { opacity: 0.6; }
-  dialog.sheet { box-sizing: border-box; width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 48px); padding: 0; border: 0; border-radius: 16px; background: var(--card-background-color, #fff); color: var(--primary-text-color); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45); overflow: hidden; }
+  dialog.sheet { box-sizing: border-box; width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 48px); max-height: calc(100dvh - 48px); padding: 0; border: 0; border-radius: 16px; background: var(--card-background-color, #fff); color: var(--primary-text-color); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45); overflow: hidden; }
   dialog.sheet[open] { display: flex; flex-direction: column; }
   dialog.sheet::backdrop { background: rgba(0, 0, 0, 0.5); }
   dialog.sheet header { display: flex; align-items: center; gap: 4px; padding: 6px 12px 6px 6px; border-bottom: 1px solid var(--divider-color); flex: none; }
@@ -52,7 +52,7 @@ export const cardStyles = css`
   .facts dt { color: var(--secondary-text-color); }
   .facts dd { margin: 0; overflow-wrap: anywhere; color: var(--primary-text-color); }
   @media (max-width: 600px) {
-    dialog.sheet { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; border-radius: 0; }
+    dialog.sheet { width: 100vw; max-width: 100vw; height: 100vh; max-height: 100vh; height: 100dvh; max-height: 100dvh; margin: 0; border-radius: 0; }
   }
   .group { padding: 0 8px 8px 8px; }
   .group h3 { margin: 6px 8px 2px; font-size: 0.72rem; font-weight: 500; color: var(--secondary-text-color); text-transform: uppercase; letter-spacing: 0.05em; }

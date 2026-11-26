@@ -26,7 +26,7 @@ export class OptionsDialog extends LitElement {
   static override styles = css`
     dialog { width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 48px); padding: 0; border: 0; border-radius: 16px; background: var(--card-background-color, #fff); color: var(--primary-text-color); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45); }
     dialog::backdrop { background: rgba(0, 0, 0, 0.5); }
-    @media (max-width: 600px) { dialog { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; border-radius: 0; } form { height: 100dvh; } }
+    @media (max-width: 600px) { dialog { width: 100vw; max-width: 100vw; height: 100vh; max-height: 100vh; height: 100dvh; max-height: 100dvh; margin: 0; border-radius: 0; } form { height: 100vh; height: 100dvh; } }
     form { display: grid; grid-template-rows: auto 1fr auto; max-height: inherit; margin: 0; }
     h2 { margin: 0; padding: 20px 24px 8px; font-size: 1.25rem; font-weight: 500; overflow-wrap: anywhere; }
     .body { padding: 8px 24px; overflow: auto; }

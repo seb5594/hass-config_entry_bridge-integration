@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026.11.26.3
+
+- Wider compatibility: the integration copes with Home Assistant releases that lack `ConfigFlowResult`, `supports_options` or `StaticPathConfig`, and enforces the single instance itself; the card is built for browsers from 2020 on (ES2020: Chrome 80, Safari 14, Firefox 74) and has fallbacks for `dvh` and `color-mix`.
+
 ## 2026.11.26.2
 
 - 🐛 The card no longer disappears. A failed request used to hide a card that was already shown, and nothing asked again until the page was reloaded. Now only the server's own answer (*you may not see this card*) hides it; a dropped connection, a restarting Home Assistant or a reloading integration keep what is shown and are retried (after 2, 5, 15 and then every 60 seconds).

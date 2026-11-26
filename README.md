@@ -11,8 +11,10 @@
 <p align="center">
   <a href="https://my.home-assistant.io/redirect/hacs_repository/?owner=seb5594&amp;repository=hass-config_entry_panel-integration&amp;category=integration"><img src="https://img.shields.io/static/v1?label=HACS%20%C2%B7%20Marketplace&amp;message=Add%20integration&amp;color=41BDF5&amp;logo=homeassistantcommunitystore&amp;logoColor=white&amp;style=for-the-badge" alt="HACS · Marketplace" height="28"></a>
   <a href="https://github.com/seb5594/hass-config_entry_panel-integration/actions/workflows/compat.yml"><img src="https://img.shields.io/static/v1?label=home%20assistant&amp;message=%E2%89%A5%202024.7.0&amp;color=1877A5&amp;style=for-the-badge" alt="home assistant" height="28"></a><br>
-  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/releases/tag/v2026.11.26b1"><img src="https://img.shields.io/static/v1?label=integration%20version&amp;message=2026.11.26b1&amp;color=1877A5&amp;style=for-the-badge" alt="integration version" height="28"></a>
-  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/releases"><img src="https://img.shields.io/github/downloads/seb5594/hass-config_entry_panel-integration/v2026.11.26b1/total?label=downloads&amp;color=1877A5&amp;style=for-the-badge" alt="downloads" height="28"></a><br>
+  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/releases"><img src="https://img.shields.io/static/v1?label=integration%20version&amp;message=2026.11.26.3&amp;color=1877A5&amp;style=for-the-badge" alt="integration version" height="28"></a>
+  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/releases"><img src="https://img.shields.io/github/downloads/seb5594/hass-config_entry_panel-integration/latest/total?label=downloads&amp;color=1877A5&amp;style=for-the-badge" alt="downloads" height="28"></a><br>
+  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/stargazers"><img src="https://img.shields.io/github/stars/seb5594/hass-config_entry_panel-integration?label=stars&amp;style=flat" alt="stars" height="20"></a>
+  <a href="https://github.com/seb5594/hass-config_entry_panel-integration/forks"><img src="https://img.shields.io/github/forks/seb5594/hass-config_entry_panel-integration?label=forks&amp;style=flat" alt="forks" height="20"></a>
   <a href="https://github.com/seb5594/hass-config_entry_panel-integration/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/seb5594/hass-config_entry_panel-integration/ci.yml?branch=main&amp;label=checks&amp;style=flat" alt="checks" height="20"></a>
   <img src="https://img.shields.io/static/v1?label=tests&amp;message=90%20passed&amp;color=2F855A&amp;style=flat" alt="tests" height="20">
   <img src="https://img.shields.io/static/v1?label=frontend%20size&amp;message=77.9%20KiB&amp;color=1877A5&amp;style=flat" alt="frontend size" height="20">
@@ -102,7 +104,7 @@ Hiding patterns are checked on the server: very long ones and ones that could ru
 
 | | |
 | --- | --- |
-| Home Assistant | **2024.7 and newer.** Tested for real, with the real core, from 2024.7 to 2026.9 (Python 3.12 to 3.14); the compatibility workflow keeps testing the releases that follow and lowers the minimum as far as the tests pass. |
+| Home Assistant | **2024.7 and newer.** Tested for real, with the real core, from 2024.6 to 2026.9 (Python 3.12 to 3.14; the compatibility workflow tests from 2024.7); the compatibility workflow keeps testing the releases that follow and lowers the minimum as far as the tests pass. |
 | Dashboards | Masonry and sections view, edit mode, YAML mode. The card reports its size to the sections layout. |
 | Browsers and phones | Current Chrome, Edge, Firefox and Safari and the Home Assistant apps. Built for phones first: nothing is wider than the screen, popups are full-screen sheets, targets are 44 px. |
 | Installation | HACS and the Marketplace (category *Integration*), or copy `custom_components/config_entry_panel` by hand. |

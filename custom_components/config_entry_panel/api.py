@@ -133,9 +133,20 @@ def _gather(hass: HomeAssistant, entry) -> tuple[dict[str, Any], list[dict[str, 
         "entry_id": entry.entry_id, "domain": entry.domain, "title": entry.title, "state": entry.state.value,
         "disabled_by": getattr(entry.disabled_by, "value", entry.disabled_by), "reason": entry.reason,
         "source": entry.source, "pref_disable_polling": entry.pref_disable_polling,
-        "pref_disable_new_entities": entry.pref_disable_new_entities, "supports_options": entry.supports_options,
+        "pref_disable_new_entities": entry.pref_disable_new_entities, "supports_options": _supports_options(entry),
     }
     return summary, devices, entities
+
+
+def _supports_options(entry) -> bool:
+    """Whether the entry has an options dialog; older releases do not have the `supports_options` property."""
+    found = getattr(entry, "supports_options", None)
+    if found is not None:
+        return bool(found)
+    from homeassistant import config_entries
+
+    handler = config_entries.HANDLERS.get(entry.domain)
+    return bool(handler and handler.async_supports_options_flow(entry))
 
 
 def _serialize(hass: HomeAssistant, result: Any) -> dict[str, Any]:
@@ -189,7 +200,7 @@ async def ws_options_start(hass: HomeAssistant, connection: websocket_api.Active
     if (found := _require(hass, connection, msg, "configure")) is None:
         return
     data, entry = found
-    if not entry.supports_options:
+    if not _supports_options(entry):
         connection.send_error(msg["id"], websocket_api.ERR_NOT_SUPPORTED, "This entry has no options")
         return
     try:
