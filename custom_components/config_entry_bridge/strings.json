@@ -1,0 +1,13 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Config Entry Bridge",
+        "description": "This lets chosen people open the settings of a config entry or reload it, without being administrators. Nothing is configured here: an administrator grants the rights per person in the Config Entry Card."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Config Entry Bridge is already set up."
+    }
+  }
+}

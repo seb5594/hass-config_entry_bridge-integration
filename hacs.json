@@ -1,7 +1,7 @@
 {
-  "name": "Example Integration",
-  "homeassistant": "2024.4.0",
+  "name": "Config Entry Bridge",
+  "homeassistant": "2026.9.0",
   "render_readme": true,
   "zip_release": true,
-  "filename": "example_integration.zip"
+  "filename": "config_entry_bridge.zip"
 }

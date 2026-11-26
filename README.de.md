@@ -1,11 +1,25 @@
-# Vorlage für Home-Assistant-Integrationen
+# Config Entry Bridge
 
 [🇬🇧 English](README.md) · **🇩🇪 Deutsch**
 
-Die Vorlage enthält eine Beispielintegration mit Konfigurationsdialog, Tests gegen Home Assistant und einer Pipeline für die Release-ZIPs.
+Eine Home-Assistant-Komponente, die das hinter dem Zahnrad versteckte Recht für die Optionen eines Konfigurationseintrags erweitert, damit auch normale Benutzer Einstellungen einer Integration sehen und ändern können.
 
-1. Erstelle ein Repository mit dem Namen `hass-<projekt>-integration`.
-2. Benenne `custom_components/example_integration/` um. Gleiche den Ordnernamen mit `domain` in `manifest.json`, `DOMAIN` in `const.py` und dem ZIP-Namen in `hacs.json` ab. Ersetze die Repository-URLs.
-3. Ersetze den Beispielcode und ergänze Tests unter `.github/tests/`. Tests für den echten Home-Assistant-Core gehören nach `.github/ha_tests/`. Die Untergrenze in `hacs.json` gibt an, welche Version du unterstützt.
-4. Hinterlege `ORCHESTRATION_PAT` für den Zugriff auf die private Workflow-Engine. Mit einem Checkout unter `.engine/` aktualisiert `python .engine/.scripts/readme.py` den Titel und die Badges der englischen README.
-5. Erhöhe für ein Release die Version in `manifest.json` und ergänze den [Changelog](CHANGELOG.md). Auf `main` veröffentlicht die Pipeline die ZIP-Dateien. Eine Version wie `1.0.0b1` kennzeichnet eine Vorabversion.
+Home Assistant erlaubt nur Administratoren, die Einstellungen (das Zahnrad) eines Konfigurationseintrags zu öffnen oder ihn neu zu laden. Diese Integration lässt einen Administrator genau diese beiden Rechte pro Konfigurationseintrag an ausgewählte Personen vergeben, ohne sie zu Administratoren zu machen. Sie ist das Gegenstück zur [Config Entry Card](https://github.com/seb5594/Home-Assistant-Config-Entry-Lovelace-Card), die Eintrag, Geräte und Buttons auf einem Dashboard zeigt.
+
+## Installation
+
+Installiere sie über HACS (Badge im [englischen README](README.md)), starte Home Assistant neu und füge **Config Entry Bridge** unter **Einstellungen → Geräte & Dienste** hinzu. Es gibt nichts zu konfigurieren.
+
+## So funktioniert es
+
+- Ein Administrator vergibt `configure` und/oder `reload` für einen Konfigurationseintrag an eine *Person*. Die Rechte speichert die Integration selbst, nicht ein Dashboard.
+- Jeder Aufruf wird serverseitig geprüft: Aufrufer ist der angemeldete Benutzer der WebSocket-Verbindung, zugeordnet über seine Person-Entität. Ein im Browser verändertes Dashboard kann ein Recht nicht erweitern.
+- Das Zahnrad startet denselben Optionen-Flow, den Home Assistant für Administratoren startet. Ein Flow kann nur von dem Benutzer fortgesetzt werden, der ihn gestartet hat.
+- Administratoren dürfen immer alles und verwalten die Rechte.
+
+## Einschränkungen
+
+- Wer `configure` bekommt, kann jede Option der Integration ändern. Vergib es, als würdest du jemandem einen Schraubendreher in die Hand geben.
+- Abgedeckt sind nur Optionen-Flows, nicht Neukonfigurieren, Untereinträge, Umbenennen, Deaktivieren oder Löschen.
+- Rechte eines gelöschten Konfigurationseintrags bleiben in der Speicherdatei, bis das Recht entfernt wird; sie haben keine Wirkung.
+- Benötigt Home Assistant 2026.9 oder neuer. Die Rechteregeln und der ganze Ablauf (vergeben, starten, senden, speichern, verweigern) laufen in der CI gegen echte Home-Assistant-Releases.
