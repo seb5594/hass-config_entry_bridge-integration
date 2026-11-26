@@ -1,6 +1,6 @@
 {
   "name": "Config Entry Panel",
-  "homeassistant": "2024.7.0",
+  "homeassistant": "2024.4.0",
   "render_readme": true,
   "zip_release": true,
   "filename": "config_entry_panel.zip"
