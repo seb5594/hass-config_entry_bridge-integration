@@ -1,0 +1,93 @@
+{
+  "card": {
+    "name": "Config Entry Panel",
+    "description": "Ein Integrationseintrag mit Zahnrad, Menü und Geräten, für Personen ohne Administratorrechte.",
+    "pick_entry": "Wähle im Karten-Editor einen Konfigurationseintrag.",
+    "entry_missing": "Dieser Konfigurationseintrag existiert nicht (mehr).",
+    "not_installed": "Die Integration Config Entry Panel ist nicht eingerichtet. Füge sie unter Einstellungen, Geräte & Dienste hinzu.",
+    "load_failed": "Der Konfigurationseintrag konnte nicht geladen werden: {message}",
+    "no_entities": "Nichts anzuzeigen.",
+    "no_device": "Entitäten ohne Gerät",
+    "hidden_in_editor": "Diese Karte ist für dich ausgeblendet. Du siehst diesen Hinweis nur, weil das Dashboard gerade bearbeitet wird.",
+    "preview_banner": "Vorschau: So sieht {person} die Karte.",
+    "preview_hidden": "{person} sieht diese Karte überhaupt nicht.",
+    "preview_hidden_hint": "Füge die Person unter \"Wer diese Karte sieht\" hinzu, um sie zu zeigen."
+  },
+  "settings": {
+    "source": "Quelle",
+    "polling": "Abfrage neuer Daten",
+    "polling_on": "an",
+    "polling_off": "aus",
+    "new_entities": "Neue Entitäten",
+    "new_entities_on": "werden automatisch hinzugefügt",
+    "new_entities_off": "bleiben deaktiviert",
+    "entry_id": "Eintrags-ID"
+  },
+  "devices": {
+    "title": "Geräte"
+  },
+  "groups": {
+    "control": "Steuerelemente",
+    "sensor": "Sensoren",
+    "config": "Konfiguration",
+    "diagnostic": "Diagnose"
+  },
+  "menu": {
+    "more": "Weitere Optionen",
+    "configure": "Konfigurieren",
+    "reload": "Neu laden",
+    "reloading": "Lädt neu…",
+    "reloaded": "Neu geladen",
+    "failed": "Fehlgeschlagen: {message}"
+  },
+  "flow": {
+    "saved": "Gespeichert",
+    "closed": "Geschlossen",
+    "cancel": "Abbrechen",
+    "close": "Schließen",
+    "next": "Weiter",
+    "submit": "Speichern",
+    "unsupported": "Dieser Schritt kann hier nicht angezeigt werden. Bitte einen Administrator, ihn in den Einstellungen zu ändern."
+  },
+  "editor": {
+    "entry": "Konfigurationseintrag",
+    "entry_loading": "Konfigurationseinträge werden geladen…",
+    "title": "Titel (optional)",
+    "title_hint": "Leer lassen, um den Namen des Konfigurationseintrags zu verwenden.",
+    "rules_note": "Wer was sehen und tun darf, wird auf dem Server gespeichert, sobald du etwas änderst. Es ist nicht Teil der Dashboard-Konfiguration.",
+    "who_title": "Wer diese Karte sieht",
+    "who_hint": "Nur die hier aufgeführten Personen sehen die Karte. Für alle anderen ist sie unsichtbar, als gäbe es sie nicht. Administratoren sehen immer alles.",
+    "no_one": "Noch niemand ist aufgeführt. Nur Administratoren sehen diese Karte.",
+    "no_more_people": "Alle Personen sind bereits aufgeführt.",
+    "add_person": "Person hinzufügen",
+    "add": "Hinzufügen",
+    "remove": "Entfernen",
+    "sections": "Sieht",
+    "section_settings": "Einstellungen des Eintrags",
+    "section_devices": "Geräte und Entitäten",
+    "may": "Darf",
+    "may_configure": "die Einstellungen öffnen (Zahnrad)",
+    "may_reload": "den Konfigurationseintrag neu laden",
+    "role_admin": "Administrator",
+    "role_user": "Benutzer",
+    "role_none": "Kein Benutzer verknüpft",
+    "admin_hint": "Administratoren sehen immer alles. Diese Regel zählt nur in der Vorschau.",
+    "saved": "Gespeichert",
+    "saving": "Speichert…",
+    "save_failed": "Nicht gespeichert: {message}",
+    "preview": "Vorschau als",
+    "preview_hint": "Zeigt die Karte genau so, wie die gewählte Person sie sieht, damit du nicht versehentlich zu viel freigibst.",
+    "preview_none": "Person wählen",
+    "hide_title": "Auf der Geräteseite ausblenden",
+    "hide_hint": "Diese Entitäten sind für alle ausgeblendet, die keine Administratoren sind.",
+    "hide_person": "Nur für {person} ausgeblendet",
+    "patterns": "Muster (reguläre Ausdrücke)",
+    "pattern_hint": "Wird mit Entitäts-ID und Name verglichen, Groß-/Kleinschreibung egal. Beispiel: _rssi$",
+    "pattern_add": "Muster hinzufügen",
+    "pattern_invalid": "Das ist kein gültiger regulärer Ausdruck, oder einer, der zu lange laufen könnte.",
+    "entities": "Entitäten",
+    "entities_none": "Dieser Konfigurationseintrag hat keine Entitäten.",
+    "entities_filter": "Liste filtern",
+    "count_hidden": "{count} ausgeblendet"
+  }
+}

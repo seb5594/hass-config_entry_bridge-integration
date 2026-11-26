@@ -1,0 +1,13 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Config Entry Panel",
+        "description": "Shows an integration entry like Home Assistant's settings page, with its gear and menu, on a dashboard, so chosen people can use it without being administrators. Nothing is configured here: add the \"Config entry panel\" card to a dashboard and choose who may see and do what."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Config Entry Panel is already set up."
+    }
+  }
+}

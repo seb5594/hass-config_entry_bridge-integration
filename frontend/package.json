@@ -1,0 +1,26 @@
+{
+  "name": "config-entry-panel-frontend",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The card of the Config Entry Panel integration; built into custom_components/config_entry_panel/frontend/",
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch",
+    "lint": "tsc --noEmit",
+    "test": "node --test \"test/**/*.test.ts\"",
+    "e2e": "node test/browser/e2e.cjs",
+    "screenshots": "node tools/screenshots.cjs"
+  },
+  "devDependencies": {
+    "@mdi/js": "^7.4.47",
+    "@types/node": "^22.20.7",
+    "esbuild": "^0.28.2",
+    "lit": "^3.3.3",
+    "typescript": "~5.9.3"
+  }
+}

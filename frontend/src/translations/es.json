@@ -1,0 +1,93 @@
+{
+  "card": {
+    "name": "Panel de entradas de configuración",
+    "description": "Una entrada de integración con su engranaje, menú y dispositivos, para personas que no son administradores.",
+    "pick_entry": "Selecciona una entrada de configuración en el editor de tarjetas.",
+    "entry_missing": "Esta entrada de configuración ya no existe.",
+    "not_installed": "La integración Config Entry Panel no está configurada. Añádela en Ajustes, Dispositivos y servicios.",
+    "load_failed": "No se ha podido cargar la entrada de configuración: {message}",
+    "no_entities": "No hay nada que mostrar.",
+    "no_device": "Entidades sin dispositivo",
+    "hidden_in_editor": "Esta tarjeta está oculta para ti. Ves esta nota porque se está editando el panel de control.",
+    "preview_banner": "Vista previa: esto es lo que ve {person}.",
+    "preview_hidden": "{person} no ve esta tarjeta en absoluto.",
+    "preview_hidden_hint": "Añade a la persona en «Quién ve esta tarjeta» para mostrarla."
+  },
+  "settings": {
+    "source": "Fuente",
+    "polling": "Comprobación de actualizaciones",
+    "polling_on": "activada",
+    "polling_off": "desactivada",
+    "new_entities": "Nuevas entidades",
+    "new_entities_on": "se añaden automáticamente",
+    "new_entities_off": "permanecen desactivadas",
+    "entry_id": "ID de la entrada"
+  },
+  "devices": {
+    "title": "Dispositivos"
+  },
+  "groups": {
+    "control": "Controles",
+    "sensor": "Sensores",
+    "config": "Configuración",
+    "diagnostic": "Diagnóstico"
+  },
+  "menu": {
+    "more": "Más opciones",
+    "configure": "Configurar",
+    "reload": "Recargar",
+    "reloading": "Recargando…",
+    "reloaded": "Recargada",
+    "failed": "Error: {message}"
+  },
+  "flow": {
+    "saved": "Guardado",
+    "closed": "Cerrado",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "next": "Siguiente",
+    "submit": "Guardar",
+    "unsupported": "Este paso no se puede mostrar aquí. Pide a un administrador que lo modifique en los ajustes."
+  },
+  "editor": {
+    "entry": "Entrada de configuración",
+    "entry_loading": "Cargando entradas de configuración…",
+    "title": "Título (opcional)",
+    "title_hint": "Déjalo en blanco para utilizar el nombre de la entrada de configuración.",
+    "rules_note": "Quién puede ver y hacer qué se guarda en el servidor en cuanto cambias algo. No forma parte de la configuración del panel de control.",
+    "who_title": "Quién ve esta tarjeta",
+    "who_hint": "Solo las personas que aparecen en esta lista pueden ver la tarjeta. Para el resto, está oculta, como si no existiera. Los administradores siempre lo ven todo.",
+    "no_one": "Aún no aparece nadie en la lista. Solo los administradores pueden ver esta tarjeta.",
+    "no_more_people": "Todas las personas ya figuran en la lista.",
+    "add_person": "Añadir una persona",
+    "add": "Añadir",
+    "remove": "Eliminar",
+    "sections": "Ve",
+    "section_settings": "Configuración de la entrada",
+    "section_devices": "Dispositivos y entidades",
+    "may": "Puede",
+    "may_configure": "abrir los ajustes (engranaje)",
+    "may_reload": "recargar la entrada de configuración",
+    "role_admin": "Administrador",
+    "role_user": "Usuario",
+    "role_none": "No hay ningún usuario asociado",
+    "admin_hint": "Los administradores siempre lo ven todo. Esta regla solo cuenta en la vista previa.",
+    "saved": "Guardado",
+    "saving": "Guardando…",
+    "save_failed": "No se ha guardado: {message}",
+    "preview": "Vista previa como",
+    "preview_hint": "Muestra la tarjeta tal y como la ve la persona elegida, para que no reveles demasiado sin querer.",
+    "preview_none": "Elige a una persona",
+    "hide_title": "Ocultar en la página del dispositivo",
+    "hide_hint": "Estas entidades están ocultas para todos aquellos que no sean administradores.",
+    "hide_person": "Oculto solo para {person}",
+    "patterns": "Patrones (expresiones regulares)",
+    "pattern_hint": "Se compara con el identificador de la entidad y el nombre, sin distinguir mayúsculas de minúsculas. Ejemplo: _rssi$",
+    "pattern_add": "Añadir un patrón",
+    "pattern_invalid": "Esta expresión regular no es válida o podría tardar demasiado en ejecutarse.",
+    "entities": "Entidades",
+    "entities_none": "Esta entrada de configuración no contiene entidades.",
+    "entities_filter": "Filtrar la lista",
+    "count_hidden": "{count} ocultas"
+  }
+}

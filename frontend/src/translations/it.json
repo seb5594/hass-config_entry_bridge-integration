@@ -1,0 +1,93 @@
+{
+  "card": {
+    "name": "Pannello delle voci di configurazione",
+    "description": "Una voce di integrazione con il suo ingranaggio, il menu e i dispositivi, per persone che non sono amministratori.",
+    "pick_entry": "Scegli una voce di configurazione nell'editor delle schede.",
+    "entry_missing": "Questa voce di configurazione non esiste (più).",
+    "not_installed": "L'integrazione Config Entry Panel non è configurata. Aggiungila in Impostazioni, Dispositivi e servizi.",
+    "load_failed": "Impossibile caricare la voce di configurazione: {message}",
+    "no_entities": "Niente da mostrare.",
+    "no_device": "Entità prive di dispositivo",
+    "hidden_in_editor": "Questa scheda è nascosta per te. Vedi questa nota perché la dashboard è in fase di modifica.",
+    "preview_banner": "Anteprima: ecco cosa vede {person}.",
+    "preview_hidden": "{person} non vede affatto questa scheda.",
+    "preview_hidden_hint": "Aggiungi la persona in \"Chi vede questa scheda\" per mostrarla."
+  },
+  "settings": {
+    "source": "Fonte",
+    "polling": "Richiesta di aggiornamenti",
+    "polling_on": "attiva",
+    "polling_off": "disattivata",
+    "new_entities": "Nuove entità",
+    "new_entities_on": "aggiunte automaticamente",
+    "new_entities_off": "restano disattivate",
+    "entry_id": "ID voce"
+  },
+  "devices": {
+    "title": "Dispositivi"
+  },
+  "groups": {
+    "control": "Comandi",
+    "sensor": "Sensori",
+    "config": "Configurazione",
+    "diagnostic": "Diagnostica"
+  },
+  "menu": {
+    "more": "Altre opzioni",
+    "configure": "Configura",
+    "reload": "Ricarica",
+    "reloading": "Ricaricamento…",
+    "reloaded": "Ricaricata",
+    "failed": "Errore: {message}"
+  },
+  "flow": {
+    "saved": "Salvato",
+    "closed": "Chiuso",
+    "cancel": "Annulla",
+    "close": "Chiudi",
+    "next": "Avanti",
+    "submit": "Salva",
+    "unsupported": "Questo passaggio non può essere mostrato qui. Chiedi a un amministratore di modificarlo nelle impostazioni."
+  },
+  "editor": {
+    "entry": "Voce di configurazione",
+    "entry_loading": "Caricamento delle voci di configurazione in corso…",
+    "title": "Titolo (facoltativo)",
+    "title_hint": "Lasciare vuoto per utilizzare il nome della voce di configurazione.",
+    "rules_note": "Chi può vedere e fare cosa viene salvato sul server non appena modifichi qualcosa. Non fa parte della configurazione della dashboard.",
+    "who_title": "Chi vede questa scheda",
+    "who_hint": "Solo le persone elencate qui possono vedere la scheda. Per tutti gli altri è nascosta, come se non esistesse. Gli amministratori vedono sempre tutto.",
+    "no_one": "Non c'è ancora nessuno nell'elenco. Solo gli amministratori possono visualizzare questa scheda.",
+    "no_more_people": "Tutte le persone sono già presenti nell'elenco.",
+    "add_person": "Aggiungi una persona",
+    "add": "Aggiungi",
+    "remove": "Rimuovi",
+    "sections": "Vede",
+    "section_settings": "Impostazioni della voce",
+    "section_devices": "Dispositivi ed entità",
+    "may": "Può",
+    "may_configure": "apri le impostazioni (ingranaggio)",
+    "may_reload": "ricaricare la voce di configurazione",
+    "role_admin": "Amministratore",
+    "role_user": "Utente",
+    "role_none": "Nessun utente associato",
+    "admin_hint": "Gli amministratori vedono sempre tutto. Questa regola conta solo nell'anteprima.",
+    "saved": "Salvato",
+    "saving": "Salvataggio in corso…",
+    "save_failed": "Non salvato: {message}",
+    "preview": "Anteprima come",
+    "preview_hint": "Mostra la scheda esattamente come la vede la persona scelta, così non rischi di svelare troppo per sbaglio.",
+    "preview_none": "Scegli una persona",
+    "hide_title": "Nascondi nella pagina del dispositivo",
+    "hide_hint": "Queste entità sono nascoste a tutti coloro che non sono amministratori.",
+    "hide_person": "Nascosto solo per {person}",
+    "patterns": "Modelli (espressioni regolari)",
+    "pattern_hint": "Confronto con l'ID dell'entità e il nome, senza distinguere tra maiuscole e minuscole. Esempio: _rssi$",
+    "pattern_add": "Aggiungi un modello",
+    "pattern_invalid": "Questa non è un'espressione regolare valida, oppure potrebbe richiedere troppo tempo per essere eseguita.",
+    "entities": "Entità",
+    "entities_none": "Questa voce di configurazione non contiene entità.",
+    "entities_filter": "Filtra l'elenco",
+    "count_hidden": "{count} nascoste"
+  }
+}

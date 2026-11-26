@@ -1,0 +1,93 @@
+{
+  "card": {
+    "name": "Config Entry Panel",
+    "description": "Een integratie-item met zijn tandwiel, menu en apparaten, voor mensen die geen beheerders zijn.",
+    "pick_entry": "Kies een configuratie-item in de kaart-editor.",
+    "entry_missing": "Dit configuratie-item bestaat niet (meer).",
+    "not_installed": "De integratie Config Entry Panel is niet ingesteld. Voeg deze toe onder Instellingen, Apparaten en diensten.",
+    "load_failed": "Het configuratie-item kon niet worden geladen: {message}",
+    "no_entities": "Niets te tonen.",
+    "no_device": "Entiteiten zonder apparaat",
+    "hidden_in_editor": "Deze kaart is voor jou verborgen. Je ziet dit bericht omdat het dashboard momenteel wordt bewerkt.",
+    "preview_banner": "Voorbeeld: dit is wat {person} ziet.",
+    "preview_hidden": "{person} ziet deze kaart helemaal niet.",
+    "preview_hidden_hint": "Voeg de persoon toe onder \"Wie ziet deze kaart\" om de kaart te tonen."
+  },
+  "settings": {
+    "source": "Bron",
+    "polling": "Controleren op updates",
+    "polling_on": "aan",
+    "polling_off": "uit",
+    "new_entities": "Nieuwe entiteiten",
+    "new_entities_on": "worden automatisch toegevoegd",
+    "new_entities_off": "blijven uitgeschakeld",
+    "entry_id": "Item-ID"
+  },
+  "devices": {
+    "title": "Apparaten"
+  },
+  "groups": {
+    "control": "Bedieningselementen",
+    "sensor": "Sensoren",
+    "config": "Configuratie",
+    "diagnostic": "Diagnostiek"
+  },
+  "menu": {
+    "more": "Meer opties",
+    "configure": "Configureren",
+    "reload": "Opnieuw laden",
+    "reloading": "Opnieuw laden…",
+    "reloaded": "Opnieuw geladen",
+    "failed": "Mislukt: {message}"
+  },
+  "flow": {
+    "saved": "Opgeslagen",
+    "closed": "Gesloten",
+    "cancel": "Annuleren",
+    "close": "Sluiten",
+    "next": "Volgende",
+    "submit": "Opslaan",
+    "unsupported": "Deze stap kan hier niet worden weergegeven. Vraag een beheerder om dit in de instellingen aan te passen."
+  },
+  "editor": {
+    "entry": "Configuratie-item",
+    "entry_loading": "Configuratie-items worden geladen…",
+    "title": "Titel (optioneel)",
+    "title_hint": "Laat dit veld leeg om de naam van het configuratie-item te gebruiken.",
+    "rules_note": "Wie wat mag zien en doen wordt op de server opgeslagen zodra je iets wijzigt. Het maakt geen deel uit van de dashboardconfiguratie.",
+    "who_title": "Wie ziet deze kaart",
+    "who_hint": "Alleen de hier genoemde personen kunnen de kaart zien. Voor alle anderen is deze verborgen, alsof hij niet bestaat. Beheerders zien altijd alles.",
+    "no_one": "Er staat nog niemand op de lijst. Alleen beheerders kunnen deze kaart zien.",
+    "no_more_people": "Iedereen staat al op de lijst.",
+    "add_person": "Een persoon toevoegen",
+    "add": "Toevoegen",
+    "remove": "Verwijderen",
+    "sections": "Ziet",
+    "section_settings": "Instellingen van het item",
+    "section_devices": "Apparaten en entiteiten",
+    "may": "Mag",
+    "may_configure": "de instellingen openen (tandwiel)",
+    "may_reload": "de configuratie-invoer opnieuw laden",
+    "role_admin": "Beheerder",
+    "role_user": "Gebruiker",
+    "role_none": "Er is geen gebruiker gekoppeld",
+    "admin_hint": "Beheerders zien altijd alles. Deze regel geldt alleen in het voorbeeld.",
+    "saved": "Opgeslagen",
+    "saving": "Bezig met opslaan…",
+    "save_failed": "Niet opgeslagen: {message}",
+    "preview": "Voorbeeld weergeven als",
+    "preview_hint": "Laat de kaart precies zien zoals de gekozen persoon hem ziet, zodat je niet per ongeluk te veel prijsgeeft.",
+    "preview_none": "Kies een persoon",
+    "hide_title": "Verbergen op de apparaatpagina",
+    "hide_hint": "Deze entiteiten zijn verborgen voor iedereen die geen beheerder is.",
+    "hide_person": "Alleen verborgen voor {person}",
+    "patterns": "Patronen (reguliere expressies)",
+    "pattern_hint": "Vergeleken met de entiteits-ID en de naam, waarbij hoofdletters en kleine letters niet worden onderscheiden. Voorbeeld: _rssi$",
+    "pattern_add": "Een patroon toevoegen",
+    "pattern_invalid": "Dit is geen geldige reguliere expressie, of een die te lang zou kunnen duren.",
+    "entities": "Entiteiten",
+    "entities_none": "Dit configuratie-item bevat geen entiteiten.",
+    "entities_filter": "De lijst filteren",
+    "count_hidden": "{count} verborgen"
+  }
+}

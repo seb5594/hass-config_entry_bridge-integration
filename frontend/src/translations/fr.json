@@ -1,0 +1,93 @@
+{
+  "card": {
+    "name": "Panneau de configuration",
+    "description": "Une entrée d'intégration avec son engrenage, son menu et ses appareils, destinée aux personnes qui ne sont pas administrateurs.",
+    "pick_entry": "Choisissez une entrée de configuration dans l'éditeur de cartes.",
+    "entry_missing": "Cette entrée de configuration n'existe pas (plus).",
+    "not_installed": "L'intégration Config Entry Panel n'est pas configurée. Ajoutez-la dans Paramètres, Appareils et services.",
+    "load_failed": "Impossible de charger l'entrée de configuration : {message}",
+    "no_entities": "Rien à afficher.",
+    "no_device": "Entités sans appareil",
+    "hidden_in_editor": "Cette carte vous est masquée. Vous voyez cette note car le tableau de bord est en cours de modification.",
+    "preview_banner": "Aperçu : voici ce que voit {person}.",
+    "preview_hidden": "{person} ne voit absolument pas cette carte.",
+    "preview_hidden_hint": "Ajoutez la personne dans « Qui voit cette carte » pour l'afficher."
+  },
+  "settings": {
+    "source": "Source",
+    "polling": "Vérification des mises à jour",
+    "polling_on": "activée",
+    "polling_off": "désactivée",
+    "new_entities": "Nouvelles entités",
+    "new_entities_on": "ajoutées automatiquement",
+    "new_entities_off": "restent désactivées",
+    "entry_id": "Identifiant de l'entrée"
+  },
+  "devices": {
+    "title": "Appareils"
+  },
+  "groups": {
+    "control": "Commandes",
+    "sensor": "Capteurs",
+    "config": "Configuration",
+    "diagnostic": "Diagnostic"
+  },
+  "menu": {
+    "more": "Plus d'options",
+    "configure": "Configurer",
+    "reload": "Recharger",
+    "reloading": "Rechargement…",
+    "reloaded": "Rechargée",
+    "failed": "Échec : {message}"
+  },
+  "flow": {
+    "saved": "Enregistré",
+    "closed": "Fermé",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "next": "Suivant",
+    "submit": "Enregistrer",
+    "unsupported": "Cette étape ne peut pas être affichée ici. Demandez à un administrateur de la modifier dans les paramètres."
+  },
+  "editor": {
+    "entry": "Entrée de configuration",
+    "entry_loading": "Chargement des entrées de configuration…",
+    "title": "Titre (facultatif)",
+    "title_hint": "Laissez ce champ vide pour utiliser le nom de l'entrée de configuration.",
+    "rules_note": "Qui peut voir et faire quoi est enregistré sur le serveur dès que vous modifiez quelque chose. Cela ne fait pas partie de la configuration du tableau de bord.",
+    "who_title": "Qui voit cette carte",
+    "who_hint": "Seules les personnes mentionnées ici peuvent voir la carte. Pour tous les autres, elle est masquée, comme si elle n'existait pas. Les administrateurs voient toujours tout.",
+    "no_one": "Personne n'y figure pour l'instant. Seuls les administrateurs peuvent voir cette carte.",
+    "no_more_people": "Toutes les personnes figurent déjà sur la liste.",
+    "add_person": "Ajouter une personne",
+    "add": "Ajouter",
+    "remove": "Supprimer",
+    "sections": "Voit",
+    "section_settings": "Paramètres de l'entrée",
+    "section_devices": "Appareils et entités",
+    "may": "Peut",
+    "may_configure": "ouvrir les paramètres (engrenage)",
+    "may_reload": "recharger l'entrée de configuration",
+    "role_admin": "Administrateur",
+    "role_user": "Utilisateur",
+    "role_none": "Aucun utilisateur associé",
+    "admin_hint": "Les administrateurs voient toujours tout. Cette règle ne compte que dans l'aperçu.",
+    "saved": "Enregistré",
+    "saving": "Enregistrement…",
+    "save_failed": "Non enregistré : {message}",
+    "preview": "Aperçu en tant que",
+    "preview_hint": "Montre la carte exactement telle que la voit la personne choisie, afin de ne pas en dévoiler trop par inadvertance.",
+    "preview_none": "Choisissez une personne",
+    "hide_title": "Masquer sur la page de l'appareil",
+    "hide_hint": "Ces entités sont masquées pour toutes les personnes qui ne sont pas administrateurs.",
+    "hide_person": "Masqué uniquement pour {person}",
+    "patterns": "Motifs (expressions régulières)",
+    "pattern_hint": "Comparé à l'identifiant de l'entité et au nom, sans tenir compte de la casse. Exemple : _rssi$",
+    "pattern_add": "Ajouter un motif",
+    "pattern_invalid": "Ce n'est pas une expression régulière valide, ou elle pourrait s'exécuter trop longtemps.",
+    "entities": "Entités",
+    "entities_none": "Cette entrée de configuration ne contient aucune entité.",
+    "entities_filter": "Filtrer la liste",
+    "count_hidden": "{count} masquées"
+  }
+}

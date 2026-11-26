@@ -1,0 +1,93 @@
+{
+  "card": {
+    "name": "Config entry panel",
+    "description": "An integration entry with its gear, menu and devices, for people who are not administrators.",
+    "pick_entry": "Choose a config entry in the card editor.",
+    "entry_missing": "This config entry does not exist (any more).",
+    "not_installed": "The Config Entry Panel integration is not set up. Add it under Settings, Devices & services.",
+    "load_failed": "The config entry could not be loaded: {message}",
+    "no_entities": "Nothing to show.",
+    "no_device": "Entities without a device",
+    "hidden_in_editor": "This card is hidden from you. You see this note because the dashboard is being edited.",
+    "preview_banner": "Preview: this is what {person} sees.",
+    "preview_hidden": "{person} does not see this card at all.",
+    "preview_hidden_hint": "Add the person under \"Who sees this card\" to show it."
+  },
+  "settings": {
+    "source": "Source",
+    "polling": "Polling for updates",
+    "polling_on": "on",
+    "polling_off": "off",
+    "new_entities": "New entities",
+    "new_entities_on": "added automatically",
+    "new_entities_off": "stay disabled",
+    "entry_id": "Entry ID"
+  },
+  "devices": {
+    "title": "Devices"
+  },
+  "groups": {
+    "control": "Controls",
+    "sensor": "Sensors",
+    "config": "Configuration",
+    "diagnostic": "Diagnostic"
+  },
+  "menu": {
+    "more": "More options",
+    "configure": "Configure",
+    "reload": "Reload",
+    "reloading": "Reloading…",
+    "reloaded": "Reloaded",
+    "failed": "Failed: {message}"
+  },
+  "flow": {
+    "saved": "Saved",
+    "closed": "Closed",
+    "cancel": "Cancel",
+    "close": "Close",
+    "next": "Next",
+    "submit": "Save",
+    "unsupported": "This step cannot be shown here. Ask an administrator to change it in the settings."
+  },
+  "editor": {
+    "entry": "Config entry",
+    "entry_loading": "Loading config entries…",
+    "title": "Title (optional)",
+    "title_hint": "Leave empty to use the name of the config entry.",
+    "rules_note": "Who may see and do what is saved on the server as soon as you change it. It is not part of the dashboard configuration.",
+    "who_title": "Who sees this card",
+    "who_hint": "Only the people listed here see the card. For everybody else it is hidden as if it did not exist. Administrators always see everything.",
+    "no_one": "Nobody is listed yet. Only administrators see this card.",
+    "no_more_people": "Every person is already listed.",
+    "add_person": "Add a person",
+    "add": "Add",
+    "remove": "Remove",
+    "sections": "Sees",
+    "section_settings": "Settings of the entry",
+    "section_devices": "Devices and entities",
+    "may": "May",
+    "may_configure": "open the settings (gear)",
+    "may_reload": "reload the config entry",
+    "role_admin": "Administrator",
+    "role_user": "User",
+    "role_none": "No user linked",
+    "admin_hint": "Administrators always see everything. This rule only matters in the preview.",
+    "saved": "Saved",
+    "saving": "Saving…",
+    "save_failed": "Not saved: {message}",
+    "preview": "Preview as",
+    "preview_hint": "Shows the card exactly as the chosen person sees it, so you do not give away too much by accident.",
+    "preview_none": "Choose a person",
+    "hide_title": "Hide on the device page",
+    "hide_hint": "These entities are hidden from everybody who is not an administrator.",
+    "hide_person": "Hidden only for {person}",
+    "patterns": "Patterns (regular expressions)",
+    "pattern_hint": "Matched against the entity ID and the name, ignoring case. Example: _rssi$",
+    "pattern_add": "Add a pattern",
+    "pattern_invalid": "This is not a valid regular expression, or one that could run too long.",
+    "entities": "Entities",
+    "entities_none": "This config entry has no entities.",
+    "entities_filter": "Filter the list",
+    "count_hidden": "{count} hidden"
+  }
+}

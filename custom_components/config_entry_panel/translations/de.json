@@ -1,0 +1,13 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Config Entry Panel",
+        "description": "Zeigt einen Integrationseintrag wie die Einstellungsseite von Home Assistant, mit Zahnrad und Menü, auf einem Dashboard, damit ausgewählte Personen ihn nutzen können, ohne Administrator zu sein. Hier wird nichts konfiguriert: Füge die Karte \"Config entry panel\" zu einem Dashboard hinzu und lege fest, wer was sehen und tun darf."
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Config Entry Panel ist bereits eingerichtet."
+    }
+  }
+}
